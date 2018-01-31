@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.magicbox.mapper.FrameMapper">
+  <resultMap id="BaseResultMap" type="com.magicbox.model.Frame">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="shop_code" jdbcType="VARCHAR" property="shopCode" />
+    <result column="frame_code" jdbcType="VARCHAR" property="frameCode" />
+    <result column="frame_status" jdbcType="TINYINT" property="frameStatus" />
+    <result column="frame_model" jdbcType="VARCHAR" property="frameModel" />
+    <result column="card_code" jdbcType="VARCHAR" property="cardCode" />
+    <result column="internet_flow" jdbcType="VARCHAR" property="internetFlow" />
+    <result column="product_time" jdbcType="TIMESTAMP" property="productTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, shop_code, frame_code, frame_status, frame_model, card_code, internet_flow, product_time, 
+    create_time, update_time, create_user, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.magicbox.model.FrameExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_shop_frame
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_shop_frame
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_shop_frame
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.magicbox.model.FrameExample">
+    delete from t_shop_frame
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.magicbox.model.Frame">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_shop_frame (shop_code, frame_code, frame_status, 
+      frame_model, card_code, internet_flow, 
+      product_time, create_time, update_time, 
+      create_user, update_user)
+    values (#{shopCode,jdbcType=VARCHAR}, #{frameCode,jdbcType=VARCHAR}, #{frameStatus,jdbcType=TINYINT}, 
+      #{frameModel,jdbcType=VARCHAR}, #{cardCode,jdbcType=VARCHAR}, #{internetFlow,jdbcType=VARCHAR}, 
+      #{productTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.magicbox.model.Frame">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_shop_frame
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="shopCode != null">
+        shop_code,
+      </if>
+      <if test="frameCode != null">
+        frame_code,
+      </if>
+      <if test="frameStatus != null">
+        frame_status,
+      </if>
+      <if test="frameModel != null">
+        frame_model,
+      </if>
+      <if test="cardCode != null">
+        card_code,
+      </if>
+      <if test="internetFlow != null">
+        internet_flow,
+      </if>
+      <if test="productTime != null">
+        product_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="shopCode != null">
+        #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="frameCode != null">
+        #{frameCode,jdbcType=VARCHAR},
+      </if>
+      <if test="frameStatus != null">
+        #{frameStatus,jdbcType=TINYINT},
+      </if>
+      <if test="frameModel != null">
+        #{frameModel,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null">
+        #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="internetFlow != null">
+        #{internetFlow,jdbcType=VARCHAR},
+      </if>
+      <if test="productTime != null">
+        #{productTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.magicbox.model.FrameExample" resultType="java.lang.Long">
+    select count(*) from t_shop_frame
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_shop_frame
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.shopCode != null">
+        shop_code = #{record.shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.frameCode != null">
+        frame_code = #{record.frameCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.frameStatus != null">
+        frame_status = #{record.frameStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.frameModel != null">
+        frame_model = #{record.frameModel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardCode != null">
+        card_code = #{record.cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.internetFlow != null">
+        internet_flow = #{record.internetFlow,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productTime != null">
+        product_time = #{record.productTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_shop_frame
+    set id = #{record.id,jdbcType=BIGINT},
+      shop_code = #{record.shopCode,jdbcType=VARCHAR},
+      frame_code = #{record.frameCode,jdbcType=VARCHAR},
+      frame_status = #{record.frameStatus,jdbcType=TINYINT},
+      frame_model = #{record.frameModel,jdbcType=VARCHAR},
+      card_code = #{record.cardCode,jdbcType=VARCHAR},
+      internet_flow = #{record.internetFlow,jdbcType=VARCHAR},
+      product_time = #{record.productTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      update_user = #{record.updateUser,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.magicbox.model.Frame">
+    update t_shop_frame
+    <set>
+      <if test="shopCode != null">
+        shop_code = #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="frameCode != null">
+        frame_code = #{frameCode,jdbcType=VARCHAR},
+      </if>
+      <if test="frameStatus != null">
+        frame_status = #{frameStatus,jdbcType=TINYINT},
+      </if>
+      <if test="frameModel != null">
+        frame_model = #{frameModel,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCode != null">
+        card_code = #{cardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="internetFlow != null">
+        internet_flow = #{internetFlow,jdbcType=VARCHAR},
+      </if>
+      <if test="productTime != null">
+        product_time = #{productTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.magicbox.model.Frame">
+    update t_shop_frame
+    set shop_code = #{shopCode,jdbcType=VARCHAR},
+      frame_code = #{frameCode,jdbcType=VARCHAR},
+      frame_status = #{frameStatus,jdbcType=TINYINT},
+      frame_model = #{frameModel,jdbcType=VARCHAR},
+      card_code = #{cardCode,jdbcType=VARCHAR},
+      internet_flow = #{internetFlow,jdbcType=VARCHAR},
+      product_time = #{productTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

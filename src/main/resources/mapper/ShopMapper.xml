@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.magicbox.mapper.ShopMapper">
+  <resultMap id="BaseResultMap" type="com.magicbox.model.Shop">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="shop_code" jdbcType="VARCHAR" property="shopCode" />
+    <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
+    <result column="shop_desc" jdbcType="VARCHAR" property="shopDesc" />
+    <result column="shop_status" jdbcType="TINYINT" property="shopStatus" />
+    <result column="seller_id" jdbcType="BIGINT" property="sellerId" />
+    <result column="shop_province_code" jdbcType="VARCHAR" property="shopProvinceCode" />
+    <result column="shop_province_name" jdbcType="VARCHAR" property="shopProvinceName" />
+    <result column="shop_city_code" jdbcType="VARCHAR" property="shopCityCode" />
+    <result column="shop_city_name" jdbcType="VARCHAR" property="shopCityName" />
+    <result column="shop_district_code" jdbcType="VARCHAR" property="shopDistrictCode" />
+    <result column="shop_district_name" jdbcType="VARCHAR" property="shopDistrictName" />
+    <result column="shop_county_code" jdbcType="VARCHAR" property="shopCountyCode" />
+    <result column="shop_county_name" jdbcType="VARCHAR" property="shopCountyName" />
+    <result column="shop_address" jdbcType="VARCHAR" property="shopAddress" />
+    <result column="shop_longitude" jdbcType="VARCHAR" property="shopLongitude" />
+    <result column="shop_latitude" jdbcType="VARCHAR" property="shopLatitude" />
+    <result column="shop_photo" jdbcType="VARCHAR" property="shopPhoto" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, shop_code, shop_name, shop_desc, shop_status, seller_id, shop_province_code, 
+    shop_province_name, shop_city_code, shop_city_name, shop_district_code, shop_district_name, 
+    shop_county_code, shop_county_name, shop_address, shop_longitude, shop_latitude, 
+    shop_photo, create_time, update_time, create_user, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.magicbox.model.ShopExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_shop_shop
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_shop_shop
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_shop_shop
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.magicbox.model.ShopExample">
+    delete from t_shop_shop
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.magicbox.model.Shop">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_shop_shop (shop_code, shop_name, shop_desc, 
+      shop_status, seller_id, shop_province_code, 
+      shop_province_name, shop_city_code, shop_city_name, 
+      shop_district_code, shop_district_name, shop_county_code, 
+      shop_county_name, shop_address, shop_longitude, 
+      shop_latitude, shop_photo, create_time, 
+      update_time, create_user, update_user
+      )
+    values (#{shopCode,jdbcType=VARCHAR}, #{shopName,jdbcType=VARCHAR}, #{shopDesc,jdbcType=VARCHAR}, 
+      #{shopStatus,jdbcType=TINYINT}, #{sellerId,jdbcType=BIGINT}, #{shopProvinceCode,jdbcType=VARCHAR}, 
+      #{shopProvinceName,jdbcType=VARCHAR}, #{shopCityCode,jdbcType=VARCHAR}, #{shopCityName,jdbcType=VARCHAR}, 
+      #{shopDistrictCode,jdbcType=VARCHAR}, #{shopDistrictName,jdbcType=VARCHAR}, #{shopCountyCode,jdbcType=VARCHAR}, 
+      #{shopCountyName,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR}, #{shopLongitude,jdbcType=VARCHAR}, 
+      #{shopLatitude,jdbcType=VARCHAR}, #{shopPhoto,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.magicbox.model.Shop">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_shop_shop
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="shopCode != null">
+        shop_code,
+      </if>
+      <if test="shopName != null">
+        shop_name,
+      </if>
+      <if test="shopDesc != null">
+        shop_desc,
+      </if>
+      <if test="shopStatus != null">
+        shop_status,
+      </if>
+      <if test="sellerId != null">
+        seller_id,
+      </if>
+      <if test="shopProvinceCode != null">
+        shop_province_code,
+      </if>
+      <if test="shopProvinceName != null">
+        shop_province_name,
+      </if>
+      <if test="shopCityCode != null">
+        shop_city_code,
+      </if>
+      <if test="shopCityName != null">
+        shop_city_name,
+      </if>
+      <if test="shopDistrictCode != null">
+        shop_district_code,
+      </if>
+      <if test="shopDistrictName != null">
+        shop_district_name,
+      </if>
+      <if test="shopCountyCode != null">
+        shop_county_code,
+      </if>
+      <if test="shopCountyName != null">
+        shop_county_name,
+      </if>
+      <if test="shopAddress != null">
+        shop_address,
+      </if>
+      <if test="shopLongitude != null">
+        shop_longitude,
+      </if>
+      <if test="shopLatitude != null">
+        shop_latitude,
+      </if>
+      <if test="shopPhoto != null">
+        shop_photo,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="shopCode != null">
+        #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopName != null">
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDesc != null">
+        #{shopDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="shopStatus != null">
+        #{shopStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sellerId != null">
+        #{sellerId,jdbcType=BIGINT},
+      </if>
+      <if test="shopProvinceCode != null">
+        #{shopProvinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopProvinceName != null">
+        #{shopProvinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCityCode != null">
+        #{shopCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCityName != null">
+        #{shopCityName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDistrictCode != null">
+        #{shopDistrictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDistrictName != null">
+        #{shopDistrictName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCountyCode != null">
+        #{shopCountyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCountyName != null">
+        #{shopCountyName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopAddress != null">
+        #{shopAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLongitude != null">
+        #{shopLongitude,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLatitude != null">
+        #{shopLatitude,jdbcType=VARCHAR},
+      </if>
+      <if test="shopPhoto != null">
+        #{shopPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.magicbox.model.ShopExample" resultType="java.lang.Long">
+    select count(*) from t_shop_shop
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_shop_shop
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.shopCode != null">
+        shop_code = #{record.shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopName != null">
+        shop_name = #{record.shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopDesc != null">
+        shop_desc = #{record.shopDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopStatus != null">
+        shop_status = #{record.shopStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.sellerId != null">
+        seller_id = #{record.sellerId,jdbcType=BIGINT},
+      </if>
+      <if test="record.shopProvinceCode != null">
+        shop_province_code = #{record.shopProvinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopProvinceName != null">
+        shop_province_name = #{record.shopProvinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopCityCode != null">
+        shop_city_code = #{record.shopCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopCityName != null">
+        shop_city_name = #{record.shopCityName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopDistrictCode != null">
+        shop_district_code = #{record.shopDistrictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopDistrictName != null">
+        shop_district_name = #{record.shopDistrictName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopCountyCode != null">
+        shop_county_code = #{record.shopCountyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopCountyName != null">
+        shop_county_name = #{record.shopCountyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopAddress != null">
+        shop_address = #{record.shopAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopLongitude != null">
+        shop_longitude = #{record.shopLongitude,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopLatitude != null">
+        shop_latitude = #{record.shopLatitude,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shopPhoto != null">
+        shop_photo = #{record.shopPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_shop_shop
+    set id = #{record.id,jdbcType=BIGINT},
+      shop_code = #{record.shopCode,jdbcType=VARCHAR},
+      shop_name = #{record.shopName,jdbcType=VARCHAR},
+      shop_desc = #{record.shopDesc,jdbcType=VARCHAR},
+      shop_status = #{record.shopStatus,jdbcType=TINYINT},
+      seller_id = #{record.sellerId,jdbcType=BIGINT},
+      shop_province_code = #{record.shopProvinceCode,jdbcType=VARCHAR},
+      shop_province_name = #{record.shopProvinceName,jdbcType=VARCHAR},
+      shop_city_code = #{record.shopCityCode,jdbcType=VARCHAR},
+      shop_city_name = #{record.shopCityName,jdbcType=VARCHAR},
+      shop_district_code = #{record.shopDistrictCode,jdbcType=VARCHAR},
+      shop_district_name = #{record.shopDistrictName,jdbcType=VARCHAR},
+      shop_county_code = #{record.shopCountyCode,jdbcType=VARCHAR},
+      shop_county_name = #{record.shopCountyName,jdbcType=VARCHAR},
+      shop_address = #{record.shopAddress,jdbcType=VARCHAR},
+      shop_longitude = #{record.shopLongitude,jdbcType=VARCHAR},
+      shop_latitude = #{record.shopLatitude,jdbcType=VARCHAR},
+      shop_photo = #{record.shopPhoto,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      update_user = #{record.updateUser,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.magicbox.model.Shop">
+    update t_shop_shop
+    <set>
+      <if test="shopCode != null">
+        shop_code = #{shopCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopName != null">
+        shop_name = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDesc != null">
+        shop_desc = #{shopDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="shopStatus != null">
+        shop_status = #{shopStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sellerId != null">
+        seller_id = #{sellerId,jdbcType=BIGINT},
+      </if>
+      <if test="shopProvinceCode != null">
+        shop_province_code = #{shopProvinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopProvinceName != null">
+        shop_province_name = #{shopProvinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCityCode != null">
+        shop_city_code = #{shopCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCityName != null">
+        shop_city_name = #{shopCityName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDistrictCode != null">
+        shop_district_code = #{shopDistrictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopDistrictName != null">
+        shop_district_name = #{shopDistrictName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCountyCode != null">
+        shop_county_code = #{shopCountyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="shopCountyName != null">
+        shop_county_name = #{shopCountyName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopAddress != null">
+        shop_address = #{shopAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLongitude != null">
+        shop_longitude = #{shopLongitude,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLatitude != null">
+        shop_latitude = #{shopLatitude,jdbcType=VARCHAR},
+      </if>
+      <if test="shopPhoto != null">
+        shop_photo = #{shopPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.magicbox.model.Shop">
+    update t_shop_shop
+    set shop_code = #{shopCode,jdbcType=VARCHAR},
+      shop_name = #{shopName,jdbcType=VARCHAR},
+      shop_desc = #{shopDesc,jdbcType=VARCHAR},
+      shop_status = #{shopStatus,jdbcType=TINYINT},
+      seller_id = #{sellerId,jdbcType=BIGINT},
+      shop_province_code = #{shopProvinceCode,jdbcType=VARCHAR},
+      shop_province_name = #{shopProvinceName,jdbcType=VARCHAR},
+      shop_city_code = #{shopCityCode,jdbcType=VARCHAR},
+      shop_city_name = #{shopCityName,jdbcType=VARCHAR},
+      shop_district_code = #{shopDistrictCode,jdbcType=VARCHAR},
+      shop_district_name = #{shopDistrictName,jdbcType=VARCHAR},
+      shop_county_code = #{shopCountyCode,jdbcType=VARCHAR},
+      shop_county_name = #{shopCountyName,jdbcType=VARCHAR},
+      shop_address = #{shopAddress,jdbcType=VARCHAR},
+      shop_longitude = #{shopLongitude,jdbcType=VARCHAR},
+      shop_latitude = #{shopLatitude,jdbcType=VARCHAR},
+      shop_photo = #{shopPhoto,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS,GMT+8} [%p] %c:%line - %m%n" />
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${catalina.home}/logs/app.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${catalina.home}/logs/app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+	
+			<!-- 每个文件至多100M，保存30天，但总共不能超过10G -->
+			<maxFileSize>100MB</maxFileSize>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>10GB</totalSizeCap>
+		</rollingPolicy>
+	
+		<encoder>
+			<pattern>${PATTERN}</pattern>
+		</encoder>
+	</appender>
+	
+	<logger name="com.magicbox.mapper" level="DEBUG" /> <!--打印动态SQL -->
+	<logger name="com.magicbox.dao" level="DEBUG" /><!-- 打印动态SQL -->
+
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ROLLING" />
+	</root>
+</configuration>
