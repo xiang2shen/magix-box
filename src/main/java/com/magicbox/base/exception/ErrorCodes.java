@@ -28,7 +28,8 @@ public enum ErrorCodes implements ResponseHead {
 	BOX_NO_STOCK("PRD10026", "该盒子的商品库存不足"),
 	BOX_NO_PRODUCT("BOX10027", "该盒子没有商品"),
 	ORDER_NOT_FOUND("ORD10028", "该订单不存在"),
-	MAP_API_ERROR("MAP10029", "地图接口失败");
+	MAP_API_ERROR("MAP10029", "地图接口失败"),
+	FRAME_HEALTH_ERROR("ORD10030", "设备故障");
 	
 	
 	

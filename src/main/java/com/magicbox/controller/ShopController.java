@@ -1,5 +1,7 @@
 package com.magicbox.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.magicbox.base.exception.ErrorCodes;
 import com.magicbox.base.support.Page;
 import com.magicbox.base.support.ResponseWrapper;
+import com.magicbox.base.utilities.CsvUtils;
 import com.magicbox.dto.ShopDTO;
 import com.magicbox.model.Shop;
 import com.magicbox.service.api.ShopApiService;
@@ -48,7 +51,10 @@ public class ShopController extends BaseController {
 	
 	@ApiOperation("创建店铺")
 	@PostMapping("/createShop")
-	public ResponseWrapper<Shop> createShop(@RequestParam String token, Shop shop) {
+	public ResponseWrapper<Shop> createShop(
+			@RequestParam String token, 
+			@RequestParam(required = false) String tagIdCsv, 
+			Shop shop) {
 		
 		Long memberId = getMemberId(token);
 		
@@ -56,12 +62,15 @@ public class ShopController extends BaseController {
 			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
 		}
 		
-		return shopApiService.createShop(memberId, shop);
+		return shopApiService.createShop(memberId, shop, CsvUtils.parseLong(tagIdCsv));
 	}
 	
 	@ApiOperation("更新店铺")
-	@PostMapping("/UpdateShop")
-	public ResponseWrapper<Shop> UpdateShop(@RequestParam String token, Shop shop) {
+	@PostMapping("/updateShop")
+	public ResponseWrapper<Shop> updateShop(
+			@RequestParam String token, 
+			@RequestParam(required = false) String tagIdCsv, 
+			Shop shop) {
 		
 		Long memberId = getMemberId(token);
 		
@@ -69,7 +78,7 @@ public class ShopController extends BaseController {
 			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
 		}
 		
-		return shopApiService.UpdateShop(memberId, shop);
+		return shopApiService.updateShop(memberId, shop, CsvUtils.parseLong(tagIdCsv));
 	}
 	
 	@ApiOperation("根据店铺编号查询店铺")
@@ -94,5 +103,33 @@ public class ShopController extends BaseController {
 			) {
 		
 		return shopApiService.findShopPageForBuyer(shopName, pageNo, pageSize);
+	}
+	
+	@ApiOperation("查询店铺类别列表")
+	@PostMapping("/findShopCategoryList")
+	public ResponseWrapper<List<String>> findShopCategoryList() {
+		
+		return shopApiService.findShopCategoryList();
+	}
+	
+	@ApiOperation("查询店铺特性列表")
+	@PostMapping("/findShopPropertyList")
+	public ResponseWrapper<List<String>> findShopPropertyList() {
+		
+		return shopApiService.findShopPropertyList();
+	}
+	
+	@ApiOperation("搜索店铺和商品")
+	@PostMapping("/searchShopAndProduct")
+	public ResponseWrapper<Page<ShopDTO>> searchShopAndProduct(
+			@RequestParam(required = false) String text,
+			@RequestParam(required = false) Long shopTagId,
+			@RequestParam Double lon,
+			@RequestParam Double lat,
+			@RequestParam Integer pageNo,
+			@RequestParam Integer pageSize
+			) {
+		
+		return shopApiService.searchShopAndProduct(text, shopTagId, lon, lat, pageNo, pageSize);
 	}
 }

@@ -59,4 +59,17 @@ public class BoxService {
 		
 		return boxMapper.selectByExample(example);
 	}
+
+	public void updateStockByBoxCode(String boxCode, Integer productStock) {
+		if (StringUtils.isNotBlank(boxCode) && null != productStock) {
+			
+			BoxExample example = new BoxExample();
+			example.or().andBoxCodeEqualTo(boxCode);
+			
+			Box record = new Box();
+			record.setProductStock(productStock);
+			
+			boxMapper.updateByExampleSelective(record, example);
+		}
+	}
 }

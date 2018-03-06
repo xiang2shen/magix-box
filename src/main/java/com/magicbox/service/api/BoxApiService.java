@@ -3,11 +3,14 @@ package com.magicbox.service.api;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.magicbox.base.constants.MqttConstants;
 import com.magicbox.base.exception.ErrorCodes;
 import com.magicbox.base.support.ResponseWrapper;
 import com.magicbox.base.utilities.BeanChecker;
@@ -16,6 +19,8 @@ import com.magicbox.model.Box;
 import com.magicbox.model.Product;
 import com.magicbox.model.Seller;
 import com.magicbox.model.Shop;
+import com.magicbox.mqtt.MqttClient;
+import com.magicbox.mqtt.callback.SynStockCallback;
 import com.magicbox.service.BoxService;
 import com.magicbox.service.ProductService;
 import com.magicbox.service.ShopService;
@@ -36,6 +41,10 @@ public class BoxApiService {
 	private ShopService shopService;
 	@Autowired
 	private MemberApiService memberApiService;
+	@Autowired
+	private MqttClient mqttClient;
+	@Autowired
+	private SynStockCallback synStockCallback;
 	
 
 	public ResponseWrapper<Box> bindBoxWithProduct(Long memberId, String productCode, String boxCode) {
@@ -100,7 +109,6 @@ public class BoxApiService {
 		
 		box.setBoxCode(boxCode);
 		box.setFrameCode("testFrameCode");
-		box.setBoxCode(boxCode);
 		box.setBoxStatus(1);
 		box.setBoxModel("测试型号");
 		box.setCapacity(8);
@@ -112,4 +120,35 @@ public class BoxApiService {
 		return ResponseWrapper.succeed(box);
 	}
 
+	@PostConstruct
+	public ResponseWrapper<?> subscribeSynStock() {
+		mqttClient.subcribe(MqttConstants.TOPIC_SYN_STOCK, synStockCallback);
+		return ResponseWrapper.succeed();
+	}
+
+	public ResponseWrapper<Box> createOrUpdateBox(String frameCode, String boxCode, Integer stock) {
+		BeanChecker.getInstance().notBlank(frameCode).notBlank(boxCode).positive(stock);
+		
+		Box box = boxService.selectOneByBoxCode(boxCode);
+		if (null == box) {
+			
+			box = new Box();
+			Date now = new Date();
+			
+			box.setFrameCode(frameCode);
+			box.setBoxCode(boxCode);
+			box.setBoxStatus(1);
+			box.setCreateTime(now);
+			box.setUpdateTime(now);
+			
+			boxMapper.insert(box);
+		} else {
+			
+			box.setFrameCode(frameCode);	// 更新设备号
+			box.setProductStock(stock);
+			boxMapper.updateByPrimaryKeySelective(box);
+		}
+		
+		return ResponseWrapper.succeed(boxService.selectOneByBoxCode(boxCode));
+	}
 }

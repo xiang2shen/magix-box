@@ -145,6 +145,9 @@ public class ProductApiService {
 			if (null == productPO) {
 				return ResponseWrapper.fail(ErrorCodes.PRODUCT_NOT_FOUND);
 			}
+			if (!productPO.getShopCode().equals(product.getShopCode())) {
+				return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_BELONG_TO_SELLER);
+			}
 			
 			productPO.setProductName(product.getProductName());
 			productPO.setProductDesc(product.getProductDesc());

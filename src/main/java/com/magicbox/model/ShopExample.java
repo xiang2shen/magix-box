@@ -1364,6 +1364,336 @@ public class ShopExample {
             return (Criteria) this;
         }
 
+        public Criteria andShopPhoneIsNull() {
+            addCriterion("shop_phone is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneIsNotNull() {
+            addCriterion("shop_phone is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneEqualTo(String value) {
+            addCriterion("shop_phone =", value, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneNotEqualTo(String value) {
+            addCriterion("shop_phone <>", value, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneGreaterThan(String value) {
+            addCriterion("shop_phone >", value, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneGreaterThanOrEqualTo(String value) {
+            addCriterion("shop_phone >=", value, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneLessThan(String value) {
+            addCriterion("shop_phone <", value, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneLessThanOrEqualTo(String value) {
+            addCriterion("shop_phone <=", value, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneLike(String value) {
+            addCriterion("shop_phone like", value, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneNotLike(String value) {
+            addCriterion("shop_phone not like", value, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneIn(List<String> values) {
+            addCriterion("shop_phone in", values, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneNotIn(List<String> values) {
+            addCriterion("shop_phone not in", values, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneBetween(String value1, String value2) {
+            addCriterion("shop_phone between", value1, value2, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPhoneNotBetween(String value1, String value2) {
+            addCriterion("shop_phone not between", value1, value2, "shopPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesIsNull() {
+            addCriterion("shop_categories is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesIsNotNull() {
+            addCriterion("shop_categories is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesEqualTo(String value) {
+            addCriterion("shop_categories =", value, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesNotEqualTo(String value) {
+            addCriterion("shop_categories <>", value, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesGreaterThan(String value) {
+            addCriterion("shop_categories >", value, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesGreaterThanOrEqualTo(String value) {
+            addCriterion("shop_categories >=", value, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesLessThan(String value) {
+            addCriterion("shop_categories <", value, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesLessThanOrEqualTo(String value) {
+            addCriterion("shop_categories <=", value, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesLike(String value) {
+            addCriterion("shop_categories like", value, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesNotLike(String value) {
+            addCriterion("shop_categories not like", value, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesIn(List<String> values) {
+            addCriterion("shop_categories in", values, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesNotIn(List<String> values) {
+            addCriterion("shop_categories not in", values, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesBetween(String value1, String value2) {
+            addCriterion("shop_categories between", value1, value2, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCategoriesNotBetween(String value1, String value2) {
+            addCriterion("shop_categories not between", value1, value2, "shopCategories");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesIsNull() {
+            addCriterion("shop_properties is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesIsNotNull() {
+            addCriterion("shop_properties is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesEqualTo(String value) {
+            addCriterion("shop_properties =", value, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesNotEqualTo(String value) {
+            addCriterion("shop_properties <>", value, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesGreaterThan(String value) {
+            addCriterion("shop_properties >", value, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesGreaterThanOrEqualTo(String value) {
+            addCriterion("shop_properties >=", value, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesLessThan(String value) {
+            addCriterion("shop_properties <", value, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesLessThanOrEqualTo(String value) {
+            addCriterion("shop_properties <=", value, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesLike(String value) {
+            addCriterion("shop_properties like", value, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesNotLike(String value) {
+            addCriterion("shop_properties not like", value, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesIn(List<String> values) {
+            addCriterion("shop_properties in", values, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesNotIn(List<String> values) {
+            addCriterion("shop_properties not in", values, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesBetween(String value1, String value2) {
+            addCriterion("shop_properties between", value1, value2, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopPropertiesNotBetween(String value1, String value2) {
+            addCriterion("shop_properties not between", value1, value2, "shopProperties");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeIsNull() {
+            addCriterion("shop_open_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeIsNotNull() {
+            addCriterion("shop_open_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeEqualTo(Integer value) {
+            addCriterion("shop_open_time =", value, "shopOpenTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeNotEqualTo(Integer value) {
+            addCriterion("shop_open_time <>", value, "shopOpenTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeGreaterThan(Integer value) {
+            addCriterion("shop_open_time >", value, "shopOpenTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("shop_open_time >=", value, "shopOpenTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeLessThan(Integer value) {
+            addCriterion("shop_open_time <", value, "shopOpenTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeLessThanOrEqualTo(Integer value) {
+            addCriterion("shop_open_time <=", value, "shopOpenTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeIn(List<Integer> values) {
+            addCriterion("shop_open_time in", values, "shopOpenTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeNotIn(List<Integer> values) {
+            addCriterion("shop_open_time not in", values, "shopOpenTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeBetween(Integer value1, Integer value2) {
+            addCriterion("shop_open_time between", value1, value2, "shopOpenTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopOpenTimeNotBetween(Integer value1, Integer value2) {
+            addCriterion("shop_open_time not between", value1, value2, "shopOpenTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeIsNull() {
+            addCriterion("shop_close_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeIsNotNull() {
+            addCriterion("shop_close_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeEqualTo(Integer value) {
+            addCriterion("shop_close_time =", value, "shopCloseTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeNotEqualTo(Integer value) {
+            addCriterion("shop_close_time <>", value, "shopCloseTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeGreaterThan(Integer value) {
+            addCriterion("shop_close_time >", value, "shopCloseTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("shop_close_time >=", value, "shopCloseTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeLessThan(Integer value) {
+            addCriterion("shop_close_time <", value, "shopCloseTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeLessThanOrEqualTo(Integer value) {
+            addCriterion("shop_close_time <=", value, "shopCloseTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeIn(List<Integer> values) {
+            addCriterion("shop_close_time in", values, "shopCloseTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeNotIn(List<Integer> values) {
+            addCriterion("shop_close_time not in", values, "shopCloseTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeBetween(Integer value1, Integer value2) {
+            addCriterion("shop_close_time between", value1, value2, "shopCloseTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopCloseTimeNotBetween(Integer value1, Integer value2) {
+            addCriterion("shop_close_time not between", value1, value2, "shopCloseTime");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

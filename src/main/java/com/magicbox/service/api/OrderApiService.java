@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.magicbox.base.constants.FrameStatusEnum;
+import com.magicbox.base.constants.MqttConstants;
 import com.magicbox.base.constants.OrderStatusEnum;
 import com.magicbox.base.constants.PaymentWayEnum;
 import com.magicbox.base.exception.ErrorCodes;
@@ -24,13 +28,19 @@ import com.magicbox.dto.OrderDTO;
 import com.magicbox.mapper.MemberMapper;
 import com.magicbox.mapper.OrderMapper;
 import com.magicbox.model.Box;
+import com.magicbox.model.Frame;
+import com.magicbox.model.FrameHealthLog;
 import com.magicbox.model.Member;
 import com.magicbox.model.Order;
 import com.magicbox.model.Product;
 import com.magicbox.model.ProductImage;
 import com.magicbox.model.Seller;
 import com.magicbox.model.Shop;
+import com.magicbox.mqtt.MqttClient;
+import com.magicbox.mqtt.callback.PangCallback;
 import com.magicbox.service.BoxService;
+import com.magicbox.service.FrameHealthLogService;
+import com.magicbox.service.FrameService;
 import com.magicbox.service.OrderService;
 import com.magicbox.service.ProductImageService;
 import com.magicbox.service.ProductService;
@@ -47,6 +57,8 @@ public class OrderApiService {
 	@Autowired
 	private BoxService boxService;
 	@Autowired
+	private FrameService frameService;
+	@Autowired
 	private ShopService shopService;
 	@Autowired
 	private MemberApiService memberApiService;
@@ -60,43 +72,49 @@ public class OrderApiService {
 	private ProductImageService productImageService;
 	@Autowired
 	private PaymentApiService paymentApiService;
+	@Autowired
+	private MqttClient mqttClient;
+	@Autowired
+	private PangCallback pangCallback;
+	@Autowired
+	private FrameHealthLogService frameHealthLogService;
 	
 
-	public ResponseWrapper<Box> bindBoxWithProduct(Long memberId, String productCode, String boxCode) {
-		BeanChecker.getInstance().notNull(memberId).notBlank(productCode).notBlank(boxCode);
-		
-		// 校验卖家
-		Seller seller = memberApiService.findSellerByMemberId(memberId).getBody();
-		if (null == seller) {
-			return ResponseWrapper.fail(ErrorCodes.NOT_SELLER);
-		}
-		
-		Product product = productService.selectOneByProductCode(productCode);
-		if (null == product) {
-			return ResponseWrapper.fail(ErrorCodes.PRODUCT_NOT_FOUND);
-		}
-		
-		Box box = boxService.selectOneByBoxCode(boxCode);
-		if (null == box) {
-			return ResponseWrapper.fail(ErrorCodes.BOX_NOT_FOUND);
-		}
-		
-		// 校验店铺是否相同
-		Shop shop = shopService.selectOneByShopCode(product.getShopCode());
-		if (null == shop) {
-			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_FOUND);
-		}
-		if (!shop.getSellerId().equals(seller.getId())) {
-			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_BELONG_TO_SELLER);
-		}
-		if (!shop.getShopCode().equals(box.getShopCode())) {
-			return ResponseWrapper.fail(ErrorCodes.BOX_NOT_BELONG_TO_SHOP);
-		}
-		
-		boxService.updateProductCodeByBoxCode(productCode, boxCode);
-		
-		return ResponseWrapper.succeed(boxService.selectOneByBoxCode(boxCode));
-	}
+//	public ResponseWrapper<Box> bindBoxWithProduct(Long memberId, String productCode, String boxCode) {
+//		BeanChecker.getInstance().notNull(memberId).notBlank(productCode).notBlank(boxCode);
+//		
+//		// 校验卖家
+//		Seller seller = memberApiService.findSellerByMemberId(memberId).getBody();
+//		if (null == seller) {
+//			return ResponseWrapper.fail(ErrorCodes.NOT_SELLER);
+//		}
+//		
+//		Product product = productService.selectOneByProductCode(productCode);
+//		if (null == product) {
+//			return ResponseWrapper.fail(ErrorCodes.PRODUCT_NOT_FOUND);
+//		}
+//		
+//		Box box = boxService.selectOneByBoxCode(boxCode);
+//		if (null == box) {
+//			return ResponseWrapper.fail(ErrorCodes.BOX_NOT_FOUND);
+//		}
+//		
+//		// 校验店铺是否相同
+//		Shop shop = shopService.selectOneByShopCode(product.getShopCode());
+//		if (null == shop) {
+//			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_FOUND);
+//		}
+//		if (!shop.getSellerId().equals(seller.getId())) {
+//			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_BELONG_TO_SELLER);
+//		}
+//		if (!shop.getShopCode().equals(box.getShopCode())) {
+//			return ResponseWrapper.fail(ErrorCodes.BOX_NOT_BELONG_TO_SHOP);
+//		}
+//		
+//		boxService.updateProductCodeByBoxCode(productCode, boxCode);
+//		
+//		return ResponseWrapper.succeed(boxService.selectOneByBoxCode(boxCode));
+//	}
 
 
 	public ResponseWrapper<String> createOrder(Long memberId, String boxCode, Integer payWay, String clientIP) {
@@ -112,9 +130,6 @@ public class OrderApiService {
 			return ResponseWrapper.fail(ErrorCodes.BOX_NOT_FOUND);
 		}
 		
-		if (box.getProductStock() <= 0) {
-			return ResponseWrapper.fail(ErrorCodes.BOX_NO_STOCK);
-		}
 		if (StringUtils.isBlank(box.getProductCode())) {
 			return ResponseWrapper.fail(ErrorCodes.BOX_NO_PRODUCT);
 		}
@@ -130,8 +145,16 @@ public class OrderApiService {
 			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_FOUND);
 		}
 		
-		Date now = new Date();
+		// 设备健康检查
+		if (!checkFrameHealth(box)) {
+			return ResponseWrapper.fail(ErrorCodes.FRAME_HEALTH_ERROR);
+		}
 		
+		if (box.getProductStock() <= 0) {
+			return ResponseWrapper.fail(ErrorCodes.BOX_NO_STOCK);
+		}
+		
+		Date now = new Date();
 		String orderCode = "ORD" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 		
 		Order order = new Order();
@@ -141,6 +164,8 @@ public class OrderApiService {
 		order.setMemberOpenId(member.getOpenId());
 		order.setSellerId(shop.getSellerId());
 		order.setShopCode(shop.getShopCode());
+		order.setFrameCode(box.getFrameCode());
+		order.setBoxCode(boxCode);
 		order.setProductCode(box.getProductCode());
 		order.setProductName(product.getProductName());
 		order.setProductPrice(product.getProductPrice());
@@ -160,11 +185,40 @@ public class OrderApiService {
 		if (StringUtils.isBlank(payStr)) {
 			return ResponseWrapper.fail();
 		}
-//		order.setPayCode(payCode);
 		
 		orderMapper.insert(order);
 		
 		return ResponseWrapper.succeed(payStr);
+	}
+
+	private boolean checkFrameHealth(Box box) {
+		FrameHealthLog frameHealthLog = null;
+		int loopTimes = 0;
+		do {
+			
+			frameHealthLog = frameHealthLogService.selectOneByFrameCodeAndRecentSecond(box.getFrameCode(), 60);
+			if (null == frameHealthLog) {
+				mqttClient.publish(MqttConstants.TOPIC_PING + box.getFrameCode(), box.getBoxCode());
+				
+				try {
+					Thread.sleep(500L);
+				} catch (InterruptedException e) {}
+			}
+		} while (null == frameHealthLog || loopTimes++ > 10);
+		
+		return null != frameHealthLog;
+	}
+	
+	@PostConstruct
+	public ResponseWrapper<?> subscribePang() {
+		mqttClient.subcribe(MqttConstants.TOPIC_PANG, pangCallback);
+		return ResponseWrapper.succeed();
+	}
+	
+	@PostConstruct
+	public ResponseWrapper<?> subscribeOpenBoxResult() {
+		mqttClient.subcribe(MqttConstants.TOPIC_OPEN_RESULT, pangCallback);
+		return ResponseWrapper.succeed();
 	}
 
 
@@ -179,6 +233,9 @@ public class OrderApiService {
 		if (OrderStatusEnum.UNPAY.getCode().equals(order.getOrderStatus())) {
 			orderService.updateStatusByOrderCode(orderCode, payCode, OrderStatusEnum.UNPAY, OrderStatusEnum.PAY);
 		}
+		
+		String msgContent = order.getOrderCode() + "|" + order.getBoxCode() + "|" + 1;
+		mqttClient.publish(MqttConstants.TOPIC_OPEN_AFTER_PAY + order.getFrameCode(), msgContent);
 		
 		return ResponseWrapper.succeed();
 	}

@@ -62,6 +62,12 @@ CREATE TABLE `t_shop_shop` (
   `shop_latitude` varchar(16) NULL COMMENT '店铺纬度',
   `shop_photo` varchar(256) NULL COMMENT '店铺图片',
   
+  `shop_phone` varchar(32) NULL COMMENT '店铺电话',
+  `shop_categories` varchar(128) NULL COMMENT '店铺分类csv',
+  `shop_properties` varchar(128) NULL COMMENT '店铺特性csv',
+  `shop_open_time` int(11) NULL COMMENT '店铺开门时间(单位：分钟)',
+  `shop_close_time` int(11) NULL COMMENT '店铺关门时间(单位：分钟)',
+  
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `create_user` varchar(32) DEFAULT NULL,
@@ -80,13 +86,13 @@ CREATE TABLE `t_shop_shop` (
 DROP TABLE IF EXISTS `t_shop_frame`;
 CREATE TABLE `t_shop_frame` (
   `id` bigint(18) NOT NULL AUTO_INCREMENT,
-  `shop_code` varchar(32) NOT NULL COMMENT '店铺编号',
+  `shop_code` varchar(32) NULL COMMENT '店铺编号',
   `frame_code` varchar(32) NOT NULL COMMENT '框架编号',
   `frame_status` tinyint(4) NOT NULL COMMENT '框架状态(1-正常)',
-  `frame_model` varchar(32) NOT NULL COMMENT '框架型号',
-  `card_code` varchar(32) NOT NULL COMMENT '框架卡号',
+  `frame_model` varchar(32) NULL COMMENT '框架型号',
+  `card_code` varchar(32) NULL COMMENT '框架卡号',
   `internet_flow` varchar(32) NULL COMMENT '网卡流量',
-  `product_time` datetime NOT NULL COMMENT '出厂时间',
+  `product_time` datetime NULL COMMENT '出厂时间',
   
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -96,20 +102,19 @@ CREATE TABLE `t_shop_frame` (
   PRIMARY KEY (`id`),
   KEY `idx_shop_code` (`shop_code`),
   UNIQUE KEY `uk_frame_code` (`frame_code`),
-  KEY `idx_frame_status` (`frame_status`),
-  KEY `idx_frame_model` (`frame_model`)
+  KEY `idx_frame_status` (`frame_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='框架表';
 
 DROP TABLE IF EXISTS `t_shop_box`;
 CREATE TABLE `t_shop_box` (
   `id` bigint(18) NOT NULL AUTO_INCREMENT,
   `shop_code` varchar(32) NULL COMMENT '店铺编号',
-  `frame_code` varchar(32) NULL COMMENT '框架编号',
+  `frame_code` varchar(32) NOT NULL COMMENT '框架编号',
   `box_code` varchar(32) NOT NULL COMMENT '盒子编号',
   `product_code` varchar(32) NULL COMMENT '商品编号',
   `box_status` tinyint(4) NOT NULL COMMENT '盒子状态(1-正常)',
-  `box_model` varchar(32) NOT NULL COMMENT '盒子型号',
-  `capacity` int(11) NOT NULL COMMENT '盒子容量',
+  `box_model` varchar(32) NULL COMMENT '盒子型号',
+  `capacity` int(11) NULL COMMENT '盒子容量',
   `product_stock` int(11) NOT NULL COMMENT '盒子里商品的库存',
   
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -174,6 +179,9 @@ CREATE TABLE `t_ord_order` (
   `seller_id` bigint(18) NOT NULL COMMENT '卖家ID',
   
   `shop_code` varchar(32) NOT NULL COMMENT '店铺编号',
+  `frame_code` varchar(32) NOT NULL COMMENT '设备编号',
+  `box_code` varchar(32) NOT NULL COMMENT '盒子编号',
+  
   `product_code` varchar(32) NOT NULL COMMENT '商品编号',
   `product_name` varchar(64) NOT NULL COMMENT '商品名称',
   `product_price` int(11) NOT NULL COMMENT '商品价格',
@@ -235,3 +243,52 @@ CREATE TABLE `t_prd_product_tag_rel` (
   KEY `idx_tag_id` (`tag_id`),
   KEY `idx_product_code` (`product_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='商品标签关联表';
+
+DROP TABLE IF EXISTS `t_shop_frame_health_log`;
+CREATE TABLE `t_shop_frame_health_log` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT,
+  `frame_code` varchar(32) NOT NULL COMMENT '框架编号',
+  `box_code` varchar(32) NULL COMMENT '盒子编号',
+  `log_content` varchar(256) NOT NULL COMMENT '日志内容',
+  
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_user` varchar(32) DEFAULT NULL,
+  `update_user` varchar(32) DEFAULT NULL,
+  
+  PRIMARY KEY (`id`),
+  KEY `idx_frame_code` (`frame_code`),
+  KEY `idx_create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='框架健康日志表';
+
+DROP TABLE IF EXISTS `t_shop_shop_tag`;
+CREATE TABLE `t_shop_shop_tag` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT,
+  
+  `tag_name` varchar(32) NOT NULL COMMENT '标签名称',
+  
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_user` varchar(32) DEFAULT NULL,
+  `update_user` varchar(32) DEFAULT NULL,
+  
+  PRIMARY KEY (`id`),
+  KEY `idx_tag_name` (`tag_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='店铺标签表';
+
+DROP TABLE IF EXISTS `t_shop_shop_tag_rel`;
+CREATE TABLE `t_shop_shop_tag_rel` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT,
+  
+  `tag_id` bigint(18) NOT NULL COMMENT '标签id',
+  `shop_code` varchar(32) NOT NULL COMMENT '店铺编号',
+  
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_user` varchar(32) DEFAULT NULL,
+  `update_user` varchar(32) DEFAULT NULL,
+  
+  PRIMARY KEY (`id`),
+  KEY `idx_tag_id` (`tag_id`),
+  KEY `idx_shop_code` (`shop_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='店铺标签关联表';

@@ -23,6 +23,10 @@ public final class CsvUtils {
 	 * @return
 	 */
 	public static List<String> parse(String csv) {
+		return parse(csv, ",");
+	}
+	
+	public static List<String> parse(String csv, String separator) {
 		
 		if (StringUtils.isBlank(csv)) {
 			return Collections.emptyList();
@@ -30,12 +34,12 @@ public final class CsvUtils {
 		
 		List<String> list = new ArrayList<>();
 		
-		if (! csv.contains(",")) {
+		if (! csv.contains(separator)) {
 			
 			list.add(csv);
 		} else {
 			
-			String[] arr = csv.split(",");
+			String[] arr = StringUtils.split(csv, separator);
 			for (String s : arr) {
 				
 				if (StringUtils.isNotBlank(s)) {
@@ -54,6 +58,10 @@ public final class CsvUtils {
 	 * @return
 	 */
 	public static String format(List<String> list) {
+		return format(list, ",");
+	}
+	
+	public static String format(List<String> list, String separator) {
 		if (null == list) {
 			return null;
 		}
@@ -66,7 +74,7 @@ public final class CsvUtils {
 		for (String str : list) {
 			
 			sb.append(str);
-			sb.append(",");
+			sb.append(separator);
 		}
 		
 		return sb.substring(0, sb.length() - 1);

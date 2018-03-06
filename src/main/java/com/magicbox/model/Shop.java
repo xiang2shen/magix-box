@@ -40,6 +40,16 @@ public class Shop implements Serializable {
 
     private String shopPhoto;
 
+    private String shopPhone;
+
+    private String shopCategories;
+
+    private String shopProperties;
+
+    private Integer shopOpenTime;
+
+    private Integer shopCloseTime;
+
     private Date createTime;
 
     private Date updateTime;
@@ -194,6 +204,46 @@ public class Shop implements Serializable {
         this.shopPhoto = shopPhoto;
     }
 
+    public String getShopPhone() {
+        return shopPhone;
+    }
+
+    public void setShopPhone(String shopPhone) {
+        this.shopPhone = shopPhone;
+    }
+
+    public String getShopCategories() {
+        return shopCategories;
+    }
+
+    public void setShopCategories(String shopCategories) {
+        this.shopCategories = shopCategories;
+    }
+
+    public String getShopProperties() {
+        return shopProperties;
+    }
+
+    public void setShopProperties(String shopProperties) {
+        this.shopProperties = shopProperties;
+    }
+
+    public Integer getShopOpenTime() {
+        return shopOpenTime;
+    }
+
+    public void setShopOpenTime(Integer shopOpenTime) {
+        this.shopOpenTime = shopOpenTime;
+    }
+
+    public Integer getShopCloseTime() {
+        return shopCloseTime;
+    }
+
+    public void setShopCloseTime(Integer shopCloseTime) {
+        this.shopCloseTime = shopCloseTime;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -250,6 +300,11 @@ public class Shop implements Serializable {
         sb.append(", shopLongitude=").append(shopLongitude);
         sb.append(", shopLatitude=").append(shopLatitude);
         sb.append(", shopPhoto=").append(shopPhoto);
+        sb.append(", shopPhone=").append(shopPhone);
+        sb.append(", shopCategories=").append(shopCategories);
+        sb.append(", shopProperties=").append(shopProperties);
+        sb.append(", shopOpenTime=").append(shopOpenTime);
+        sb.append(", shopCloseTime=").append(shopCloseTime);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", createUser=").append(createUser);

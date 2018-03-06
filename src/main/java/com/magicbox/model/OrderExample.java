@@ -584,6 +584,146 @@ public class OrderExample {
             return (Criteria) this;
         }
 
+        public Criteria andFrameCodeIsNull() {
+            addCriterion("frame_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeIsNotNull() {
+            addCriterion("frame_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeEqualTo(String value) {
+            addCriterion("frame_code =", value, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeNotEqualTo(String value) {
+            addCriterion("frame_code <>", value, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeGreaterThan(String value) {
+            addCriterion("frame_code >", value, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("frame_code >=", value, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeLessThan(String value) {
+            addCriterion("frame_code <", value, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeLessThanOrEqualTo(String value) {
+            addCriterion("frame_code <=", value, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeLike(String value) {
+            addCriterion("frame_code like", value, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeNotLike(String value) {
+            addCriterion("frame_code not like", value, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeIn(List<String> values) {
+            addCriterion("frame_code in", values, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeNotIn(List<String> values) {
+            addCriterion("frame_code not in", values, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeBetween(String value1, String value2) {
+            addCriterion("frame_code between", value1, value2, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrameCodeNotBetween(String value1, String value2) {
+            addCriterion("frame_code not between", value1, value2, "frameCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeIsNull() {
+            addCriterion("box_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeIsNotNull() {
+            addCriterion("box_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeEqualTo(String value) {
+            addCriterion("box_code =", value, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeNotEqualTo(String value) {
+            addCriterion("box_code <>", value, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeGreaterThan(String value) {
+            addCriterion("box_code >", value, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("box_code >=", value, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeLessThan(String value) {
+            addCriterion("box_code <", value, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeLessThanOrEqualTo(String value) {
+            addCriterion("box_code <=", value, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeLike(String value) {
+            addCriterion("box_code like", value, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeNotLike(String value) {
+            addCriterion("box_code not like", value, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeIn(List<String> values) {
+            addCriterion("box_code in", values, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeNotIn(List<String> values) {
+            addCriterion("box_code not in", values, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeBetween(String value1, String value2) {
+            addCriterion("box_code between", value1, value2, "boxCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxCodeNotBetween(String value1, String value2) {
+            addCriterion("box_code not between", value1, value2, "boxCode");
+            return (Criteria) this;
+        }
+
         public Criteria andProductCodeIsNull() {
             addCriterion("product_code is null");
             return (Criteria) this;

@@ -18,6 +18,10 @@ public class Order implements Serializable {
 
     private String shopCode;
 
+    private String frameCode;
+
+    private String boxCode;
+
     private String productCode;
 
     private String productName;
@@ -104,6 +108,22 @@ public class Order implements Serializable {
 
     public void setShopCode(String shopCode) {
         this.shopCode = shopCode;
+    }
+
+    public String getFrameCode() {
+        return frameCode;
+    }
+
+    public void setFrameCode(String frameCode) {
+        this.frameCode = frameCode;
+    }
+
+    public String getBoxCode() {
+        return boxCode;
+    }
+
+    public void setBoxCode(String boxCode) {
+        this.boxCode = boxCode;
     }
 
     public String getProductCode() {
@@ -239,6 +259,8 @@ public class Order implements Serializable {
         sb.append(", memberOpenId=").append(memberOpenId);
         sb.append(", sellerId=").append(sellerId);
         sb.append(", shopCode=").append(shopCode);
+        sb.append(", frameCode=").append(frameCode);
+        sb.append(", boxCode=").append(boxCode);
         sb.append(", productCode=").append(productCode);
         sb.append(", productName=").append(productName);
         sb.append(", productPrice=").append(productPrice);
