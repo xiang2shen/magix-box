@@ -33,4 +33,11 @@ public class ShopTagService {
 		
 		return shopTagMapper.selectByExample(example);
 	}
+
+	public List<ShopTag> selectList() {
+		ShopTagExample example = new ShopTagExample();
+		example.setOrderByClause("id desc");
+		
+		return shopTagMapper.selectByExample(example);
+	}
 }

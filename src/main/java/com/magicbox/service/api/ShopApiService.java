@@ -28,10 +28,12 @@ import com.magicbox.mapper.ShopTagRelMapper;
 import com.magicbox.model.Product;
 import com.magicbox.model.Seller;
 import com.magicbox.model.Shop;
+import com.magicbox.model.ShopTag;
 import com.magicbox.model.ShopTagRel;
 import com.magicbox.service.ProductService;
 import com.magicbox.service.ShopService;
 import com.magicbox.service.ShopTagRelService;
+import com.magicbox.service.ShopTagService;
 
 @Service
 public class ShopApiService {
@@ -57,6 +59,8 @@ public class ShopApiService {
 	private ShopTagRelMapper shopTagRelMapper;
 	@Autowired
 	private ShopDAO shopDAO;
+	@Autowired
+	private ShopTagService shopTagService;
 	
 	public static final List<String> SHOP_CATEGORY_LIST = Arrays.asList("便利店", "商场", "酒店", "娱乐场所", "其他");
 	public static final List<String> SHOP_PROPERTY_LIST = Arrays.asList("24小时", "WIFI", "厕所", "充电宝", "停车");
@@ -260,5 +264,10 @@ public class ShopApiService {
 		Page<ShopDTO> shopDTOPage = toShopDTOPage(shopPage);
 		
 		return ResponseWrapper.succeed(shopDTOPage);
+	}
+
+	public ResponseWrapper<List<ShopTag>> findShopTagList() {
+		List<ShopTag> tagList = shopTagService.selectList();
+		return ResponseWrapper.succeed(tagList);
 	}
 }

@@ -292,3 +292,6 @@ CREATE TABLE `t_shop_shop_tag_rel` (
   KEY `idx_tag_id` (`tag_id`),
   KEY `idx_shop_code` (`shop_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='店铺标签关联表';
+
+INSERT INTO `t_shop_shop_tag` (`tag_name`) VALUES ('超市');
+INSERT INTO `t_shop_shop_tag` (`tag_name`) VALUES ('酒店');

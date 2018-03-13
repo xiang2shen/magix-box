@@ -16,6 +16,7 @@ import com.magicbox.base.support.ResponseWrapper;
 import com.magicbox.base.utilities.CsvUtils;
 import com.magicbox.dto.ShopDTO;
 import com.magicbox.model.Shop;
+import com.magicbox.model.ShopTag;
 import com.magicbox.service.api.ShopApiService;
 
 import io.swagger.annotations.Api;
@@ -131,5 +132,12 @@ public class ShopController extends BaseController {
 			) {
 		
 		return shopApiService.searchShopAndProduct(text, shopTagId, lon, lat, pageNo, pageSize);
+	}
+	
+	@ApiOperation("查询店铺标签")
+	@PostMapping("/findShopTagList")
+	public ResponseWrapper<List<ShopTag>> findShopTagList() {
+		
+		return shopApiService.findShopTagList();
 	}
 }
