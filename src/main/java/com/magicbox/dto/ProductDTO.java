@@ -2,6 +2,9 @@ package com.magicbox.dto;
 
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
+
+import com.magicbox.model.Box;
 import com.magicbox.model.Product;
 import com.magicbox.model.ProductImage;
 import com.magicbox.model.ProductTag;
@@ -17,4 +20,19 @@ public class ProductDTO extends Product {
 
 	private List<ProductImage> imageList;
 	private List<ProductTag> tagList;
+	private List<Box> boxList;
+	
+	public Integer getTotalStock() {
+		
+		int stock = 0;
+		if (CollectionUtils.isNotEmpty(boxList)) {
+			for (Box box : boxList) {
+				if (null != box && null != box.getProductStock()) {
+					stock += box.getProductStock();
+				}
+			}
+		}
+		
+		return stock;
+	}
 }

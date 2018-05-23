@@ -24,6 +24,8 @@
 		</encoder>
 	</appender>
 	
+	<logger name="com.magicbox.mqtt" level="DEBUG" /> <!-- mqtt调试 -->
+	
 	<logger name="com.magicbox.mapper" level="DEBUG" /> <!--打印动态SQL -->
 	<logger name="com.magicbox.dao" level="DEBUG" /><!-- 打印动态SQL -->
 

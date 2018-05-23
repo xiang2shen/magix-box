@@ -95,6 +95,9 @@ public class ProductApiService {
 		// 标签
 		List<ProductTagRel> tagRelList = productTagRelService.selectListByProductCodeList(productCodeList);
 		Map<String, List<ProductTagRel>> tagRelMap = XBeanUtils.listToValueListMap(tagRelList, String.class, "productCode");
+		// 盒子
+		List<Box> boxList = boxService.selectListByProductCodeList(productCodeList);
+		Map<String, List<Box>> boxMap = XBeanUtils.listToValueListMap(boxList, String.class, "productCode");
 		
 		List<ProductDTO> dtoList = XBeanUtils.copyList(productList, ProductDTO.class);
 		for (ProductDTO dto : dtoList) {
@@ -106,6 +109,8 @@ public class ProductApiService {
 				List<ProductTag> tagList =  productTagService.selectListByIdList(tagIdList);
 				dto.setTagList(tagList);
 			}
+			
+			dto.setBoxList(boxMap.get(dto.getProductCode()));
 		}
 		
 		return dtoList;
@@ -240,11 +245,13 @@ public class ProductApiService {
 		List<ProductTagRel> tagRelList = productTagRelService.selectListByProductCode(productCode);
 		List<Long> tagIdList = XBeanUtils.extractField(tagRelList, Long.class, "tagId");
 		List<ProductTag> tagList =  productTagService.selectListByIdList(tagIdList);
+		List<Box> boxList = boxService.selectListByProductCode(productCode);
 		
 		ProductDTO dto = new ProductDTO();
 		BeanUtils.copyProperties(product, dto);
 		dto.setImageList(imageList);
 		dto.setTagList(tagList);
+		dto.setBoxList(boxList);
 		
 		return ResponseWrapper.succeed(dto);
 	}

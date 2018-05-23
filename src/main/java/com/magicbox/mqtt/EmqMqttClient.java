@@ -48,7 +48,7 @@ public class EmqMqttClient implements MqttClient {
 	}
 	
 	@Override
-	public boolean subcribe(String topic, AbstractMqttCallback callback) {
+	public boolean subscribe(String topic, AbstractMqttCallback callback) {
 		try {
 			client.subscribe(topic);
 			client.setCallback(callback);

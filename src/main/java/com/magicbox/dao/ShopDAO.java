@@ -17,8 +17,8 @@ public interface ShopDAO {
 			+ "SELECT DISTINCT s.id "
 			+ "FROM t_shop_shop s "
 			+ "JOIN t_prd_product p ON s.shop_code = p.shop_code "
-			+ "WHERE (s.shop_name LIKE '%#{text}%' "
-			+ "OR p.product_name LIKE '%#{text}%') "
+			+ "WHERE (s.shop_name LIKE CONCAT('%',#{text},'%') "
+			+ "OR p.product_name LIKE CONCAT('%',#{text},'%')) "
 			+ "<if test='null != shopCodeList and shopCodeList.size &gt; 0'>"
 			+ "AND s.shop_code IN "
 			+ "<foreach collection='shopCodeList' item='item' index='index' open='(' close=')' separator=','>"
@@ -27,16 +27,17 @@ public interface ShopDAO {
 			+ "</if> "
 			+ ") "
 			+ "ORDER BY distance ASC "
-			+ "LIMIT #{limit} "
+			+ "LIMIT #{limit},#{pageSize} "
 			+ "</script>")
-	List<ShopDistanceDTO> selectShopListBySearchText(@Param("text")String text, @Param("shopCodeList")List<String> shopCodeList, @Param("lon")Double lon, @Param("lat")Double lat, @Param("limit")Integer limit);
+	List<ShopDistanceDTO> selectShopListBySearchText(@Param("text")String text, @Param("shopCodeList")List<String> shopCodeList, @Param("lon")Double lon, @Param("lat")Double lat, 
+			@Param("limit")Integer limit, @Param("pageSize")Integer pageSize);
 	
 	@Select("<script>SELECT COUNT(1) FROM t_shop_shop t WHERE t.id IN ("
 			+ "SELECT DISTINCT s.id "
 			+ "FROM t_shop_shop s "
 			+ "JOIN t_prd_product p ON s.shop_code = p.shop_code "
-			+ "WHERE (s.shop_name LIKE '%#{text}%' "
-			+ "OR p.product_name LIKE '%#{text}%') "
+			+ "WHERE (s.shop_name LIKE CONCAT('%',#{text},'%') "
+			+ "OR p.product_name LIKE CONCAT('%',#{text},'%')) "
 			+ "<if test='null != shopCodeList and shopCodeList.size &gt; 0'>"
 			+ "AND s.shop_code IN "
 			+ "<foreach collection='shopCodeList' item='item' index='index' open='(' close=')' separator=','>"

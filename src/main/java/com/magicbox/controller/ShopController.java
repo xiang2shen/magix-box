@@ -84,7 +84,7 @@ public class ShopController extends BaseController {
 	
 	@ApiOperation("根据店铺编号查询店铺")
 	@PostMapping("/findShopByShopCode")
-	public ResponseWrapper<Shop> findShopByShopCode(@RequestParam String token, @RequestParam String shopCode) {
+	public ResponseWrapper<ShopDTO> findShopByShopCode(@RequestParam String token, @RequestParam String shopCode) {
 		
 		Long memberId = getMemberId(token);
 		

@@ -22,6 +22,7 @@ public abstract class AbstractMqttCallback implements MqttCallback {
 
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {
+		logger.debug("收到mqtt消息，topic={}, msg={}", topic, message.toString());
 		callback(topic, message.toString());
 	}
 

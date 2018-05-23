@@ -2,6 +2,7 @@ package com.magicbox.service.api;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -178,7 +180,7 @@ public class ShopApiService {
 		return ResponseWrapper.succeed(shopPO);
 	}
 
-	public ResponseWrapper<Shop> findShopByShopCode(Long memberId, String shopCode) {
+	public ResponseWrapper<ShopDTO> findShopByShopCode(Long memberId, String shopCode) {
 		BeanChecker.getInstance().notNull(memberId).notBlank(shopCode);
 		
 //		Seller seller = memberApiService.findSellerByMemberId(memberId).getBody();
@@ -193,8 +195,9 @@ public class ShopApiService {
 //		if (!shop.getSellerId().equals(seller.getId())) {
 //			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_BELONG_TO_SELLER);
 //		}
+		ShopDTO shopDTO = toShopDTO(shop);
 		
-		return ResponseWrapper.succeed(shop);
+		return ResponseWrapper.succeed(shopDTO);
 	}
 
 	public ResponseWrapper<Page<ShopDTO>> findShopPageForBuyer(String shopName, Integer pageNo, Integer pageSize) {
@@ -234,6 +237,23 @@ public class ShopApiService {
 		
 		return shopDTOPage;
 	}
+	
+	private ShopDTO toShopDTO(Shop shop) {
+		if (null == shop) {
+			return null;
+		}
+		
+		List<Product> productList = productService.selectListByShopCodeList(Arrays.asList(shop.getShopCode()));
+		List<ProductDTO> productDTOList = productApiService.toProductDTO(productList);
+		List<ShopTagRelDTO> shopTagRelList = shopTagRelService.selectDTOListByShopCodeList(Arrays.asList(shop.getShopCode()));
+		
+		ShopDTO shopDTO = new ShopDTO();
+		BeanUtils.copyProperties(shop, shopDTO);
+		shopDTO.setProductList(productDTOList);
+		shopDTO.setShopTagList(shopTagRelList);
+		
+		return shopDTO;
+	}
 
 	public ResponseWrapper<List<String>> findShopCategoryList() {
 		return ResponseWrapper.succeed(SHOP_CATEGORY_LIST);
@@ -247,7 +267,7 @@ public class ShopApiService {
 			Integer pageSize) {
 		BeanChecker.getInstance().page(pageNo, pageSize).notNull(lon).notNull(lat);
 		
-		List<String> shopCodeList = null;
+		List<String> shopCodeList = Collections.emptyList();
 		if (null != shopTagId) {
 			List<ShopTagRel> shopTagRelList = shopTagRelService.selectListByTagId(shopTagId);
 			if (CollectionUtils.isEmpty(shopTagRelList)) {
@@ -257,7 +277,10 @@ public class ShopApiService {
 			shopCodeList = XBeanUtils.extractField(shopTagRelList, String.class, "shopCode");
 		}
 		
-		List<ShopDistanceDTO> shopList = shopDAO.selectShopListBySearchText(text, shopCodeList, lon, lat, (pageNo - 1) * pageSize);
+		if (null == text) {
+			text = "";
+		}
+		List<ShopDistanceDTO> shopList = shopDAO.selectShopListBySearchText(text, shopCodeList, lon, lat, (pageNo - 1) * pageSize, pageSize);
 		Long count = shopDAO.selectShopCountBySearchText(text, shopCodeList);
 		
 		Page<ShopDistanceDTO> shopPage = new Page<>(pageNo, pageSize, shopList, count);

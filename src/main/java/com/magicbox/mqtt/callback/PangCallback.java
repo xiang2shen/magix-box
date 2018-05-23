@@ -15,20 +15,17 @@ import com.magicbox.mqtt.AbstractMqttCallback;
 public class PangCallback extends AbstractMqttCallback {
 	
 	@Autowired
-	private SynStockCallback synStockCallback;
-	@Autowired
 	private FrameHealthLogMapper frameHealthLogMapper;
 	
 	@Override
 	public void callback(String topic, String message) {
-		synStockCallback.callback(topic, message);
-		
 		List<String> strList = CsvUtils.parse(message, "|");
 		if (strList.isEmpty()) {
 			return;
 		}
 		
 		String frameCode = strList.get(0);
+		Integer stock = Integer.parseInt(strList.get(1));	// TODO
 		
 		Date now = new Date();
 		FrameHealthLog healthLog = new FrameHealthLog();

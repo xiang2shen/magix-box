@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +12,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.magicbox.base.constants.FrameStatusEnum;
 import com.magicbox.base.constants.MqttConstants;
 import com.magicbox.base.constants.OrderStatusEnum;
 import com.magicbox.base.constants.PaymentWayEnum;
@@ -28,7 +25,6 @@ import com.magicbox.dto.OrderDTO;
 import com.magicbox.mapper.MemberMapper;
 import com.magicbox.mapper.OrderMapper;
 import com.magicbox.model.Box;
-import com.magicbox.model.Frame;
 import com.magicbox.model.FrameHealthLog;
 import com.magicbox.model.Member;
 import com.magicbox.model.Order;
@@ -37,10 +33,8 @@ import com.magicbox.model.ProductImage;
 import com.magicbox.model.Seller;
 import com.magicbox.model.Shop;
 import com.magicbox.mqtt.MqttClient;
-import com.magicbox.mqtt.callback.PangCallback;
 import com.magicbox.service.BoxService;
 import com.magicbox.service.FrameHealthLogService;
-import com.magicbox.service.FrameService;
 import com.magicbox.service.OrderService;
 import com.magicbox.service.ProductImageService;
 import com.magicbox.service.ProductService;
@@ -57,8 +51,6 @@ public class OrderApiService {
 	@Autowired
 	private BoxService boxService;
 	@Autowired
-	private FrameService frameService;
-	@Autowired
 	private ShopService shopService;
 	@Autowired
 	private MemberApiService memberApiService;
@@ -74,8 +66,6 @@ public class OrderApiService {
 	private PaymentApiService paymentApiService;
 	@Autowired
 	private MqttClient mqttClient;
-	@Autowired
-	private PangCallback pangCallback;
 	@Autowired
 	private FrameHealthLogService frameHealthLogService;
 	
@@ -209,19 +199,6 @@ public class OrderApiService {
 		return null != frameHealthLog;
 	}
 	
-	@PostConstruct
-	public ResponseWrapper<?> subscribePang() {
-		mqttClient.subcribe(MqttConstants.TOPIC_PANG, pangCallback);
-		return ResponseWrapper.succeed();
-	}
-	
-	@PostConstruct
-	public ResponseWrapper<?> subscribeOpenBoxResult() {
-		mqttClient.subcribe(MqttConstants.TOPIC_OPEN_RESULT, pangCallback);
-		return ResponseWrapper.succeed();
-	}
-
-
 	public ResponseWrapper<?> doAfterPay(String orderCode, String payCode) {
 		BeanChecker.getInstance().notBlank(orderCode);
 		
@@ -235,7 +212,7 @@ public class OrderApiService {
 		}
 		
 		String msgContent = order.getOrderCode() + "|" + order.getBoxCode() + "|" + 1;
-		mqttClient.publish(MqttConstants.TOPIC_OPEN_AFTER_PAY + order.getFrameCode(), msgContent);
+		mqttClient.publish(MqttConstants.TOPIC_OPEN + order.getFrameCode(), msgContent);
 		
 		return ResponseWrapper.succeed();
 	}
