@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.converters.DateConverter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,10 @@ public final class XBeanUtils {
 	private static final Logger logger = LoggerFactory.getLogger(XBeanUtils.class);
 
 	private XBeanUtils() {}
+	
+	static {
+		ConvertUtils.register(new DateConverter(null), Date.class);
+	}
 	
 	/**
 	 * 复制源列表转换为clazz类型列表
@@ -291,5 +297,28 @@ public final class XBeanUtils {
 		}
 		
 		return mapList;
+	}
+	
+	/**
+	 * 转换map到bean
+	 * 
+	 * @param map
+	 * @param clazz
+	 * @return
+	 */
+	public static <T> T mapToBean(Map<String, ?> map, Class<T> clazz) {
+		if (null == map || null == clazz) {
+			return null;
+		}
+		
+		try {
+			
+			T bean = clazz.newInstance();
+			org.apache.commons.beanutils.BeanUtils.populate(bean, map);
+			
+			return bean;
+		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+			throw new RuntimeException("转换map到bean异常", e);
+		}
 	}
 }

@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class MQTTTest {
 
-	String topic        = "test";
+	String topic        = "queryStock/123";
 	String content      = "ORD20180115161304|BOX00001";
 	int qos             = 2;
 	String broker       = "tcp://39.104.76.187:1883";
@@ -58,13 +58,16 @@ public class MQTTTest {
 		try {
 			MqttClient sampleClient = new MqttClient(broker, "xiang-send", new MemoryPersistence());
 			MqttConnectOptions connOpts = new MqttConnectOptions();
+			connOpts.setUserName(username);
+			connOpts.setPassword(password.toCharArray());
 			connOpts.setCleanSession(false);
 			System.out.println("Connecting to broker: " + broker);
 			sampleClient.connect(connOpts);
 
 			System.out.println("Connected");
 			System.out.println("Publishing message: " + content);
-			MqttMessage message = new MqttMessage(content.getBytes());
+//			MqttMessage message = new MqttMessage("��051SMC	u\"|��051SMC	u\"|��051SMC	u".getBytes());
+			MqttMessage message = new MqttMessage("123".getBytes());
 			message.setQos(qos);
 			sampleClient.publish(topic, message);
 
