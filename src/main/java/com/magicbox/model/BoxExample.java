@@ -474,6 +474,66 @@ public class BoxExample {
             return (Criteria) this;
         }
 
+        public Criteria andBoxPositionIsNull() {
+            addCriterion("box_position is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionIsNotNull() {
+            addCriterion("box_position is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionEqualTo(Integer value) {
+            addCriterion("box_position =", value, "boxPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionNotEqualTo(Integer value) {
+            addCriterion("box_position <>", value, "boxPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionGreaterThan(Integer value) {
+            addCriterion("box_position >", value, "boxPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionGreaterThanOrEqualTo(Integer value) {
+            addCriterion("box_position >=", value, "boxPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionLessThan(Integer value) {
+            addCriterion("box_position <", value, "boxPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionLessThanOrEqualTo(Integer value) {
+            addCriterion("box_position <=", value, "boxPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionIn(List<Integer> values) {
+            addCriterion("box_position in", values, "boxPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionNotIn(List<Integer> values) {
+            addCriterion("box_position not in", values, "boxPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionBetween(Integer value1, Integer value2) {
+            addCriterion("box_position between", value1, value2, "boxPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andBoxPositionNotBetween(Integer value1, Integer value2) {
+            addCriterion("box_position not between", value1, value2, "boxPosition");
+            return (Criteria) this;
+        }
+
         public Criteria andBoxStatusIsNull() {
             addCriterion("box_status is null");
             return (Criteria) this;

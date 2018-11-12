@@ -10,7 +10,7 @@ import com.magicbox.base.support.ResponseWrapper;
 import com.magicbox.mqtt.MqttClient;
 import com.magicbox.mqtt.callback.OpenResultCallback;
 import com.magicbox.mqtt.callback.PangCallback;
-import com.magicbox.mqtt.callback.RegisterFrameCallback;
+import com.magicbox.mqtt.callback.SynStockCallback;
 import com.magicbox.mqtt.callback.UpdateResultCallback;
 
 @Service
@@ -20,7 +20,7 @@ public class MqttSubscribeApiService {
 	private MqttClient mqttClient;
 	
 	@Autowired
-	private RegisterFrameCallback registerFrameCallback;
+	private SynStockCallback synStockCallback;
 	@Autowired
 	private PangCallback pangCallback;
 	@Autowired
@@ -29,8 +29,8 @@ public class MqttSubscribeApiService {
 	private UpdateResultCallback updateResultCallback;
 	
 	@PostConstruct
-	public ResponseWrapper<?> subscribeRegisterFrame() {
-		mqttClient.subscribe(MqttConstants.TOPIC_REGISTER_FRAME, registerFrameCallback);
+	public ResponseWrapper<?> subscribeSynStock() {
+		mqttClient.subscribe(MqttConstants.TOPIC_SYN_STOCK, synStockCallback);
 		return ResponseWrapper.succeed();
 	}
 	

@@ -107,8 +107,8 @@ public class OrderApiService {
 //	}
 
 
-	public ResponseWrapper<String> createOrder(Long memberId, String boxCode, Integer payWay, String clientIP) {
-		BeanChecker.getInstance().notNull(memberId).notBlank(boxCode).enumMap(payWay, PaymentWayEnum.toMap());
+	public ResponseWrapper<String> createOrder(Long memberId, String boxCode, Integer quantity, Integer payWay, String clientIP) {
+		BeanChecker.getInstance().notNull(memberId).notBlank(boxCode).positive(quantity).enumMap(payWay, PaymentWayEnum.toMap());
 		
 		Member member = memberMapper.selectByPrimaryKey(memberId);
 		if (null == member) {
@@ -140,7 +140,7 @@ public class OrderApiService {
 			return ResponseWrapper.fail(ErrorCodes.FRAME_HEALTH_ERROR);
 		}
 		
-		if (box.getProductStock() <= 0) {
+		if (box.getProductStock() < quantity) {
 			return ResponseWrapper.fail(ErrorCodes.BOX_NO_STOCK);
 		}
 		
@@ -159,7 +159,7 @@ public class OrderApiService {
 		order.setProductCode(box.getProductCode());
 		order.setProductName(product.getProductName());
 		order.setProductPrice(product.getProductPrice());
-		order.setProductQuantity(1);
+		order.setProductQuantity(quantity);
 		order.setProductImg(productImageList.size() > 0 ? productImageList.get(0).getImgUrl() : null);
 		
 		order.setDueTotal(order.getProductPrice() * order.getProductQuantity());
@@ -211,8 +211,10 @@ public class OrderApiService {
 			orderService.updateStatusByOrderCode(orderCode, payCode, OrderStatusEnum.UNPAY, OrderStatusEnum.PAY);
 		}
 		
-		String msgContent = order.getOrderCode() + "|" + order.getBoxCode() + "|" + 1;
-		mqttClient.publish(MqttConstants.TOPIC_OPEN + order.getFrameCode(), msgContent);
+		boxService.minusStockByBoxCode(order.getBoxCode(), order.getProductQuantity());
+		
+		String msgContent = order.getOrderCode() + "|" + order.getBoxCode() + "|" + order.getProductQuantity();
+		mqttClient.publish(MqttConstants.TOPIC_OPEN_AFTER_PAY + order.getFrameCode(), msgContent);
 		
 		return ResponseWrapper.succeed();
 	}

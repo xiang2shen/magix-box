@@ -10,22 +10,37 @@ import com.magicbox.base.utilities.CsvUtils;
 import com.magicbox.mapper.FrameHealthLogMapper;
 import com.magicbox.model.FrameHealthLog;
 import com.magicbox.mqtt.AbstractMqttCallback;
+import com.magicbox.service.BoxService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class PangCallback extends AbstractMqttCallback {
 	
 	@Autowired
 	private FrameHealthLogMapper frameHealthLogMapper;
+	@Autowired
+	private BoxService boxService;
 	
 	@Override
 	public void callback(String topic, String message) {
-		List<String> strList = CsvUtils.parse(message, "|");
-		if (strList.isEmpty()) {
+		List<String> params = CsvUtils.parse(message, "|");
+		if (params.isEmpty()) {
 			return;
 		}
 		
-		String frameCode = strList.get(0);
-		Integer stock = Integer.parseInt(strList.get(1));	// TODO
+		String frameCode = params.get(0);
+		Integer sign = Integer.parseInt(params.get(1));
+		String boxCode = params.get(2);
+		Integer stock = Integer.parseInt(params.get(3));
+		
+		boxService.updateStockByBoxCode(boxCode, stock);	// 更新库存
+		
+		if (SUCCESS_SIGN != sign) {
+			log.error("货架[{}]上的盒子[{}]健康检查失败", frameCode, boxCode);
+			return;
+		}
 		
 		Date now = new Date();
 		FrameHealthLog healthLog = new FrameHealthLog();

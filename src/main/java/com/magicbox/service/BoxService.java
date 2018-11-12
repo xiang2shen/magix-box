@@ -61,16 +61,16 @@ public class BoxService {
 		return boxMapper.selectByExample(example);
 	}
 
-	public void updateStockByBoxCode(String boxCode, Integer productStock) {
-		if (StringUtils.isNotBlank(boxCode) && null != productStock) {
+	public void minusStockByBoxCode(String boxCode, Integer productQuantity) {
+		if (StringUtils.isNotBlank(boxCode) && null != productQuantity) {
 			
-			BoxExample example = new BoxExample();
-			example.or().andBoxCodeEqualTo(boxCode);
+			Box box = selectOneByBoxCode(boxCode);
 			
 			Box record = new Box();
-			record.setProductStock(productStock);
+			record.setId(box.getId());
+			record.setProductStock(record.getProductStock() - productQuantity >= 0 ? record.getProductStock() - productQuantity : 0);
 			
-			boxMapper.updateByExampleSelective(record, example);
+			boxMapper.updateByPrimaryKeySelective(record);
 		}
 	}
 
@@ -84,5 +84,18 @@ public class BoxService {
 		example.or().andProductCodeIn(productCodeList);
 		
 		return boxMapper.selectByExample(example);
+	}
+
+	public void updateStockByBoxCode(String boxCode, Integer stock) {
+		if (StringUtils.isNotBlank(boxCode) && null != stock) {
+			
+			BoxExample example = new BoxExample();
+			example.or().andBoxCodeEqualTo(boxCode);
+			
+			Box record = new Box();
+			record.setProductStock(stock);
+			
+			boxMapper.updateByExampleSelective(record, example);
+		}
 	}
 }

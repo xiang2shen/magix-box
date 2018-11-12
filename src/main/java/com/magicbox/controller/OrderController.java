@@ -35,6 +35,7 @@ public class OrderController extends BaseController {
 	public ResponseWrapper<String> createOrder(
 			@RequestParam String token,
 			@RequestParam String boxCode,
+			@RequestParam(defaultValue = "1") Integer quantity,
 			@RequestParam Integer payWay,
 			HttpServletRequest request
 			) {
@@ -48,7 +49,7 @@ public class OrderController extends BaseController {
 		String clientIP = IPUtils.getIp(request);
 		logger.info("下单客户端IP={}", clientIP);
 		
-		return orderApiService.createOrder(memberId, boxCode, payWay, clientIP);
+		return orderApiService.createOrder(memberId, boxCode, quantity, payWay, clientIP);
 	}
 	
 	@ApiOperation("买家根据订单编号查询订单")

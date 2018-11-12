@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractMqttCallback implements MqttCallback {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AbstractMqttCallback.class);
+	
+	protected static final int SUCCESS_SIGN = 1;
 
 	@Override
 	public void connectionLost(Throwable ex) {

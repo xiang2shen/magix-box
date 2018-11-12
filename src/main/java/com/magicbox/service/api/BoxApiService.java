@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.magicbox.base.constants.MqttConstants;
 import com.magicbox.base.exception.ErrorCodes;
 import com.magicbox.base.support.ResponseWrapper;
 import com.magicbox.base.utilities.BeanChecker;
@@ -114,8 +115,8 @@ public class BoxApiService {
 		return ResponseWrapper.succeed(box);
 	}
 
-	public ResponseWrapper<Box> createOrUpdateBox(String frameCode, String boxCode, Integer stock) {
-		BeanChecker.getInstance().notBlank(frameCode).notBlank(boxCode).positive(stock);
+	public ResponseWrapper<Box> createOrUpdateBox(String frameCode, String boxCode, Integer boxPosition, Integer capacity, Integer stock) {
+		BeanChecker.getInstance().notBlank(frameCode).notBlank(boxCode).positive(capacity).positive(stock);
 		
 		Box box = boxService.selectOneByBoxCode(boxCode);
 		if (null == box) {
@@ -125,6 +126,8 @@ public class BoxApiService {
 			
 			box.setFrameCode(frameCode);
 			box.setBoxCode(boxCode);
+			box.setCapacity(capacity);
+			box.setBoxPosition(boxPosition);
 			box.setBoxStatus(1);
 			box.setCreateTime(now);
 			box.setUpdateTime(now);
@@ -138,5 +141,36 @@ public class BoxApiService {
 		}
 		
 		return ResponseWrapper.succeed(boxService.selectOneByBoxCode(boxCode));
+	}
+
+
+	public ResponseWrapper<?> updateStock(Long memberId, String boxCode, Integer stock) {
+		BeanChecker.getInstance().notNull(memberId).notBlank(boxCode).positiveOrZero(stock);
+		
+		// 校验卖家
+		Seller seller = memberApiService.findSellerByMemberId(memberId).getBody();
+		if (null == seller) {
+			return ResponseWrapper.fail(ErrorCodes.NOT_SELLER);
+		}
+		
+		Box box = boxService.selectOneByBoxCode(boxCode);
+		if (null == box) {
+			return ResponseWrapper.fail(ErrorCodes.BOX_NOT_FOUND);
+		}
+		
+		// 校验店铺是否相同
+		Shop shop = shopService.selectOneByShopCode(box.getShopCode());
+		if (null == shop) {
+			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_FOUND);
+		}
+		if (!shop.getSellerId().equals(seller.getId())) {
+			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_BELONG_TO_SELLER);
+		}
+		
+		boxService.updateStockByBoxCode(boxCode, stock);
+		
+		mqttClient.publish(MqttConstants.TOPIC_UPDATE_STOCK + box.getFrameCode(), box.getBoxCode() + "|" + stock);
+		
+		return ResponseWrapper.succeed();
 	}
 }

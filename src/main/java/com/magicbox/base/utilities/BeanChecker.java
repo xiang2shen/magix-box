@@ -113,6 +113,14 @@ public class BeanChecker {
 		}
 		return this;
 	}
+	
+	public BeanChecker positiveOrZero(Number num) {
+		notNull(num);
+		if (num.doubleValue() < 0) {
+			throw new BusinessException(ResponseHead.PARAM_ERROR);
+		}
+		return this;
+	}
 
 	public BeanChecker mobile(String param) {
 		notNull(param);

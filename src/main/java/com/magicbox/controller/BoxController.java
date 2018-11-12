@@ -44,6 +44,23 @@ public class BoxController extends BaseController {
 		return boxApiService.bindBoxWithProduct(memberId, productCode, boxCode);
 	}
 	
+	@ApiOperation("更新盒子库存")
+	@PostMapping("/updateStock")
+	public ResponseWrapper<?> updateStock(
+			@RequestParam String token,
+			@RequestParam String boxCode,
+			@RequestParam Integer stock
+			) {
+		
+		Long memberId = getMemberId(token);
+		
+		if (null == memberId) {
+			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
+		}
+		
+		return boxApiService.updateStock(memberId, boxCode, stock);
+	}
+	
 	@ApiOperation("创建盒子（测试专用）")
 	@PostMapping("/createBox.sec")
 	public ResponseWrapper<Box> createBox(
