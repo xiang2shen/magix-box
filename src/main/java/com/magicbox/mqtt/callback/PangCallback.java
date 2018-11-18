@@ -25,6 +25,8 @@ public class PangCallback extends AbstractMqttCallback {
 	
 	@Override
 	public void callback(String topic, String message) {
+		log.debug("mqtt消息到达,topic={}", topic);
+		
 		List<String> params = CsvUtils.parse(message, "|");
 		if (params.isEmpty()) {
 			return;

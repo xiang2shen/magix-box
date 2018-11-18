@@ -22,6 +22,8 @@ public class EmqMqttClient implements MqttClient {
 			options.setUserName(username);
 			options.setPassword(password.toCharArray());
 			options.setCleanSession(false);
+			options.setAutomaticReconnect(true);
+			options.setKeepAliveInterval(10);
 			client.connect(options);
 		} catch (MqttException e) {
 			logger.error("连接EMQ服务器失败", e);
@@ -50,8 +52,7 @@ public class EmqMqttClient implements MqttClient {
 	@Override
 	public boolean subscribe(String topic, AbstractMqttCallback callback) {
 		try {
-			client.subscribe(topic);
-			client.setCallback(callback);
+			client.subscribe(topic, DEFAULT_QOS, callback);
 			return true;
 		} catch (MqttException e) {
 			logger.error("订阅主题[{}]失败", topic, e);

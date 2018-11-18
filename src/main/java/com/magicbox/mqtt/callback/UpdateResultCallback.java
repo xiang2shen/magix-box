@@ -20,6 +20,8 @@ public class UpdateResultCallback extends AbstractMqttCallback {
 	
 	@Override
 	public void callback(String topic, String message) {
+		log.debug("mqtt消息到达,topic={}", topic);
+		
 		List<String> params = CsvUtils.parse(message, "|");
 		if (params.isEmpty()) {
 			return;
@@ -33,7 +35,7 @@ public class UpdateResultCallback extends AbstractMqttCallback {
 		boxService.updateStockByBoxCode(boxCode, stock);
 		
 		if (SUCCESS_SIGN != sign) {
-			log.error("货架[{}]上的盒子[{}]下单开锁失败,sign={}", frameCode, boxCode, sign);
+			log.error("货架[{}]上的盒子[{}]更新库存开锁失败,sign={}", frameCode, boxCode, sign);
 		}
 	}
 

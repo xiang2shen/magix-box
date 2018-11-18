@@ -10,6 +10,8 @@ import com.magicbox.mqtt.AbstractMqttCallback;
 import com.magicbox.service.api.BoxApiService;
 import com.magicbox.service.api.FrameApiService;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 同步库存消息回调
  * 
@@ -17,6 +19,7 @@ import com.magicbox.service.api.FrameApiService;
  *
  */
 @Component
+@Slf4j
 public class SynStockCallback extends AbstractMqttCallback {
 	
 	@Autowired
@@ -26,6 +29,8 @@ public class SynStockCallback extends AbstractMqttCallback {
 	
 	@Override
 	public void callback(String topic, String message) {
+		log.debug("mqtt消息到达,topic={}", topic);
+		
 		List<String> params = CsvUtils.parse(message, "|");
 		if (params.isEmpty()) {
 			return;
