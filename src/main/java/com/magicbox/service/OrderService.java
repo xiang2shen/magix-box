@@ -1,7 +1,9 @@
 package com.magicbox.service;
 
 import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,6 +77,19 @@ public class OrderService {
 		example.initPage(pageNo, pageSize);
 		example.setOrderByClause("id desc");
 		example.or().andSellerIdEqualTo(sellerId);
+		
+		return selectPageByExample(example);
+	}
+
+	public Page<Order> selectPageByShopCodes(List<String> shopCodes, Integer pageNo, Integer pageSize) {
+		if (CollectionUtils.isEmpty(shopCodes)) {
+			return PageUtils.emptyPage(pageNo, pageSize);
+		}
+		
+		OrderExample example = new OrderExample();
+		example.initPage(pageNo, pageSize);
+		example.setOrderByClause("id desc");
+		example.or().andShopCodeIn(shopCodes);
 		
 		return selectPageByExample(example);
 	}

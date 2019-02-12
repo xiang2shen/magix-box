@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -300,19 +301,19 @@ public class OrderApiService {
 		BeanChecker.getInstance().notNull(memberId).page(pageNo, pageSize);
 		
 		// 校验卖家
-		Seller seller = memberApiService.findSellerByMemberId(memberId).getBody();
-		if (null == seller) {
-			return ResponseWrapper.fail(ErrorCodes.NOT_SELLER);
+		ResponseWrapper<List<Shop>> authResp = memberApiService.getShopListBySellerOrShopAssistantAuth(memberId);
+		if (authResp.isFailed()) {
+			return ResponseWrapper.fail(authResp.getHead());
 		}
+		List<Shop> shops = authResp.getBody();
+		List<String> shopCodes = shops.stream().map(Shop::getShopCode).collect(Collectors.toList());
 		
-		Page<Order> page = orderService.selectPageBySellerId(seller.getId(), pageNo, pageSize);
+		Page<Order> page = orderService.selectPageByShopCodes(shopCodes, pageNo, pageSize);
 		if (PageUtils.isEmpty(page)) {
 			return ResponseWrapper.succeed(PageUtils.emptyPage(pageNo, pageSize));
 		}
 		
-		List<String> shopCodeList = XBeanUtils.extractField(page.getItems(), String.class, "shopCode");
-		List<Shop> shopList = shopService.selectListByShopCodeList(shopCodeList);
-		Map<String, Shop> shopMap = XBeanUtils.listToMap(shopList, String.class, "shopCode");
+		Map<String, Shop> shopMap = XBeanUtils.listToMap(shops, String.class, "shopCode");
 		
 		Page<OrderDTO> orderDTOPage = PageUtils.copy(page, OrderDTO.class);
 		for (OrderDTO orderDTO : orderDTOPage) {
