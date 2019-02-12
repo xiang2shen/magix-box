@@ -55,4 +55,27 @@ public class MemberService {
 		memberMapper.updateByPrimaryKeySelective(record);
 	}
 
+	public void updateShopAssistantId(Long memberId, Long shopAssistantId) {
+		if (null == memberId || null == shopAssistantId) {
+			return;
+		}
+		
+		Member record = new Member();
+		record.setId(memberId);
+		record.setShopAssistantId(shopAssistantId);
+		
+		memberMapper.updateByPrimaryKeySelective(record);
+	}
+
+	public Member selectOneByShopAssistantId(Long shopAssistantId) {
+		if (null == shopAssistantId) {
+			return null;
+		}
+		
+		MemberExample example = new MemberExample();
+		example.or().andShopAssistantIdEqualTo(shopAssistantId);
+		
+		return XCollectionUtils.getFirstElement(memberMapper.selectByExample(example));
+	}
+
 }

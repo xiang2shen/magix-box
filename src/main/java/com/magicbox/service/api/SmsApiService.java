@@ -16,7 +16,7 @@ public class SmsApiService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SmsApiService.class);
 	
-	private static final String YUNPIAN_API_KEY = "8b569b3d39451ff1ce6d10928bc53f5b";
+	private static final String YUNPIAN_API_KEY = "0e762648b32ee85b0e1a5f1d65c5caf5";
 
 	public ResponseWrapper<?> sendMessage(String mobile, String content) {
 		
@@ -46,8 +46,8 @@ public class SmsApiService {
 
 		//发送短信API
 		Map<String, String> param = clnt.newParam(2);
-		param.put(YunpianClient.MOBILE, "13661927770");
-		param.put(YunpianClient.TEXT, "您的验证码是1234。如非本人操作，请忽略本短信。");
+		param.put(YunpianClient.MOBILE, "17602165837");
+		param.put(YunpianClient.TEXT, "您的验证码是1234。如非本人操作，请忽略本短信");
 		Result<SmsSingleSend> r = clnt.sms().single_send(param);
 		//获取返回结果，返回码:r.getCode(),返回码描述:r.getMsg(),API结果:r.getData(),其他说明:r.getDetail(),调用异常:r.getThrowable()
 

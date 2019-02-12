@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS `t_mem_member`;
 CREATE TABLE `t_mem_member` (
   `id` bigint(18) NOT NULL AUTO_INCREMENT,
   `seller_id` bigint(18) NULL COMMENT '卖家ID',
+  `shop_assistant_id` bigint(18) NULL COMMENT '店员ID',
   `open_id` varchar(64) NULL COMMENT '微信/支付宝openId',
   
   `id_card` varchar(32) NULL COMMENT '身份证号',
@@ -37,6 +38,7 @@ CREATE TABLE `t_mem_member` (
   
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_seller_id` (`seller_id`),
+  UNIQUE KEY `uk_shop_assistant_id` (`shop_assistant_id`),
   UNIQUE KEY `uk_open_id` (`open_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='会员表';
 
@@ -296,3 +298,23 @@ CREATE TABLE `t_shop_shop_tag_rel` (
 
 INSERT INTO `t_shop_shop_tag` (`tag_name`) VALUES ('超市');
 INSERT INTO `t_shop_shop_tag` (`tag_name`) VALUES ('酒店');
+
+DROP TABLE IF EXISTS `t_mem_shop_assistant`;
+CREATE TABLE `t_mem_shop_assistant` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT,
+  `assistant_mobile` varchar(32) NULL COMMENT '手机号',
+  `shop_id` bigint(18) NOT NULL COMMENT '店铺ID',
+  `seller_id` bigint(18) NOT NULL COMMENT '卖家ID',
+  `assistant_code` varchar(32) NULL COMMENT '店员编号',
+  `assistant_status` tinyint(4) NOT NULL COMMENT '状态(1-待审核,5-审核驳回,10-审核通过)',
+  
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_user` varchar(32) DEFAULT NULL,
+  `update_user` varchar(32) DEFAULT NULL,
+  
+  PRIMARY KEY (`id`),
+  KEY `idx_shop_id` (`shop_id`),
+  KEY `idx_seller_id` (`seller_id`),
+  UNIQUE KEY `uk_assistant_mobile` (`assistant_mobile`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='店员';

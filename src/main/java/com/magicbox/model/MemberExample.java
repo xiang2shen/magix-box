@@ -281,6 +281,66 @@ public class MemberExample {
             return (Criteria) this;
         }
 
+        public Criteria andShopAssistantIdIsNull() {
+            addCriterion("shop_assistant_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdIsNotNull() {
+            addCriterion("shop_assistant_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdEqualTo(Long value) {
+            addCriterion("shop_assistant_id =", value, "shopAssistantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdNotEqualTo(Long value) {
+            addCriterion("shop_assistant_id <>", value, "shopAssistantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdGreaterThan(Long value) {
+            addCriterion("shop_assistant_id >", value, "shopAssistantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("shop_assistant_id >=", value, "shopAssistantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdLessThan(Long value) {
+            addCriterion("shop_assistant_id <", value, "shopAssistantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdLessThanOrEqualTo(Long value) {
+            addCriterion("shop_assistant_id <=", value, "shopAssistantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdIn(List<Long> values) {
+            addCriterion("shop_assistant_id in", values, "shopAssistantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdNotIn(List<Long> values) {
+            addCriterion("shop_assistant_id not in", values, "shopAssistantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdBetween(Long value1, Long value2) {
+            addCriterion("shop_assistant_id between", value1, value2, "shopAssistantId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopAssistantIdNotBetween(Long value1, Long value2) {
+            addCriterion("shop_assistant_id not between", value1, value2, "shopAssistantId");
+            return (Criteria) this;
+        }
+
         public Criteria andOpenIdIsNull() {
             addCriterion("open_id is null");
             return (Criteria) this;

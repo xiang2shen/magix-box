@@ -61,6 +61,38 @@ public class BoxController extends BaseController {
 		return boxApiService.updateStock(memberId, boxCode, stock);
 	}
 	
+	@ApiOperation("重置盒子")
+	@PostMapping("/resetBox")
+	public ResponseWrapper<?> resetBox(
+			@RequestParam String token,
+			@RequestParam String boxCode
+			) {
+		
+		Long memberId = getMemberId(token);
+		
+		if (null == memberId) {
+			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
+		}
+		
+		return boxApiService.resetBox(memberId, boxCode);
+	}
+	
+	@ApiOperation("开锁盒子")
+	@PostMapping("/openBox")
+	public ResponseWrapper<?> openBox(
+			@RequestParam String token,
+			@RequestParam String boxCode
+			) {
+		
+		Long memberId = getMemberId(token);
+		
+		if (null == memberId) {
+			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
+		}
+		
+		return boxApiService.openBox(memberId, boxCode);
+	}
+	
 	@ApiOperation("创建盒子（测试专用）")
 	@PostMapping("/createBox.sec")
 	public ResponseWrapper<Box> createBox(

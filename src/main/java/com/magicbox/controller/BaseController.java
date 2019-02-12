@@ -14,7 +14,7 @@ public abstract class BaseController {
 	/**
 	 * 获取当前用户
 	 * 
-	 * @param request
+	 * @param token
 	 * @return
 	 */
 	protected SessionMember getMember(String token) {
@@ -29,11 +29,15 @@ public abstract class BaseController {
 	protected String getSessionCacheKey(String token) {
 		return "token:" + token;
 	}
+	
+	protected String getCmsSessionCacheKey(String token) {
+		return "cmstoken:" + token;
+	}
 
 	/**
 	 * 获取当前用户ID
 	 * 
-	 * @param request
+	 * @param token
 	 * @return
 	 */
 	protected Long getMemberId(String token) {
@@ -45,4 +49,18 @@ public abstract class BaseController {
 		return null;
 	}
 	
+	/**
+	 * 获取当前后台用户ID
+	 * 
+	 * @param token
+	 * @return
+	 */
+	protected Long getUserId(String token) {
+		if (StringUtils.isBlank(token)) {
+			return null;
+		}
+		
+		Long userId = redisClient.get(getCmsSessionCacheKey(token));
+		return userId;
+	}
 }

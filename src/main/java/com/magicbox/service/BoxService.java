@@ -98,4 +98,13 @@ public class BoxService {
 			boxMapper.updateByExampleSelective(record, example);
 		}
 	}
+
+	public List<Box> selectListByFrameCode(String frameCode) {
+		BoxExample example = new BoxExample();
+		example.or().andFrameCodeEqualTo(frameCode);
+		example.setOrderByClause("create_time desc");
+		
+		return boxMapper.selectByExample(example);
+	}
+	
 }

@@ -4,11 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.magicbox.base.constants.FrameStatusEnum;
 import com.magicbox.base.support.Page;
 import com.magicbox.base.utilities.XCollectionUtils;
 import com.magicbox.mapper.FrameMapper;
 import com.magicbox.model.Frame;
 import com.magicbox.model.FrameExample;
+import com.magicbox.model.FrameExample.Criteria;
 
 @Service
 public class FrameService {
@@ -29,5 +31,24 @@ public class FrameService {
 		example.or().andFrameCodeEqualTo(frameCode);
 		
 		return XCollectionUtils.getFirstElement(frameMapper.selectByExample(example));
+	}
+	
+	public Page<Frame> selectPage(String frameCode, Integer pageNo, Integer pageSize) {
+		FrameExample example = new FrameExample();
+		example.initPage(pageNo, pageSize);
+		example.setOrderByClause("create_time desc");
+		Criteria criteria = example.or();
+		if (StringUtils.isNotBlank(frameCode)) {
+			criteria.andFrameCodeLike("%" + frameCode + "%");
+		}
+		
+		return selectPageByExample(example);
+	}
+
+	public void updateFrameStatus(Long frameId, FrameStatusEnum frameStatus) {
+		Frame frame = new Frame();
+		frame.setId(frameId);
+		frame.setFrameStatus(frameStatus.getCode());
+		frameMapper.updateByPrimaryKeySelective(frame);
 	}
 }

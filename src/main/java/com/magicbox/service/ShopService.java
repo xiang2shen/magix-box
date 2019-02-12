@@ -74,4 +74,17 @@ public class ShopService {
 		
 		return selectPageByExample(example);
 	}
+
+	public List<Shop> selectListBySellerId(Long sellerId) {
+		if (null == sellerId) {
+			return Collections.emptyList();
+		}
+		
+		ShopExample example = new ShopExample();
+		example.setOrderByClause("id desc");
+		
+		example.or().andSellerIdEqualTo(sellerId);
+		
+		return shopMapper.selectByExample(example);
+	}
 }

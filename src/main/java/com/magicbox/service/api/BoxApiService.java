@@ -2,6 +2,8 @@ package com.magicbox.service.api;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,6 +133,7 @@ public class BoxApiService {
 			box.setBoxStatus(1);
 			box.setCreateTime(now);
 			box.setUpdateTime(now);
+			box.setProductStock(stock);
 			
 			boxMapper.insert(box);
 		} else {
@@ -170,6 +173,69 @@ public class BoxApiService {
 		boxService.updateStockByBoxCode(boxCode, stock);
 		
 		mqttClient.publish(MqttConstants.TOPIC_UPDATE_STOCK + box.getFrameCode(), box.getBoxCode() + "|" + stock);
+		
+		return ResponseWrapper.succeed();
+	}
+
+
+	public ResponseWrapper<?> resetBox(Long memberId, String boxCode) {
+		BeanChecker.getInstance().notNull(memberId).notBlank(boxCode);
+		
+		Box box = boxService.selectOneByBoxCode(boxCode);
+		if (null == box) {
+			return ResponseWrapper.fail(ErrorCodes.BOX_NOT_FOUND);
+		}
+		
+		// 校验店铺是否相同
+		Shop shop = shopService.selectOneByShopCode(box.getShopCode());
+		if (null == shop) {
+			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_FOUND);
+		}
+		
+		// 校验卖家店员权限
+		ResponseWrapper<List<Shop>> authResp = memberApiService.getShopListBySellerOrShopAssistantAuth(memberId);
+		if (authResp.isFailed()) {
+			return authResp;
+		}
+		List<Shop> shops = authResp.getBody();
+		List<Long> shopIds = shops.stream().map(Shop::getId).collect(Collectors.toList());
+		if (!shopIds.contains(shop.getId())) {
+			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_BELONG_TO_SELLER);
+		}
+		
+		mqttClient.publish(MqttConstants.TOPIC_RESET + box.getFrameCode(), box.getBoxCode());
+		
+		return ResponseWrapper.succeed();
+	}
+
+
+	public ResponseWrapper<?> openBox(Long memberId, String boxCode) {
+		BeanChecker.getInstance().notNull(memberId).notBlank(boxCode);
+		
+		Box box = boxService.selectOneByBoxCode(boxCode);
+		if (null == box) {
+			return ResponseWrapper.fail(ErrorCodes.BOX_NOT_FOUND);
+		}
+		
+		// 校验店铺是否相同
+		Shop shop = shopService.selectOneByShopCode(box.getShopCode());
+		if (null == shop) {
+			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_FOUND);
+		}
+		
+		// 校验卖家店员权限
+		ResponseWrapper<List<Shop>> authResp = memberApiService.getShopListBySellerOrShopAssistantAuth(memberId);
+		if (authResp.isFailed()) {
+			return authResp;
+		}
+		List<Shop> shops = authResp.getBody();
+		List<Long> shopIds = shops.stream().map(Shop::getId).collect(Collectors.toList());
+		if (!shopIds.contains(shop.getId())) {
+			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_BELONG_TO_SELLER);
+		}
+		
+		String msgContent = MqttConstants.FORCE_OPEN_ORDER_CODE + "|" + boxCode + "|" + 1;
+		mqttClient.publish(MqttConstants.TOPIC_OPEN_AFTER_PAY + box.getFrameCode(), msgContent);
 		
 		return ResponseWrapper.succeed();
 	}

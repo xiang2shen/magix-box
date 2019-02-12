@@ -71,7 +71,7 @@ public class MemberController extends BaseController {
 			
 			@Override
 			public void run() {
-				String msg = String.format("您的验证码是%s。如非本人操作，请忽略本短信。", smsCaptcha);
+				String msg = String.format("您的验证码是%s。如非本人操作，请忽略本短信", smsCaptcha);
 				logger.info("发送短信验证码:{}", msg);
 				smsApiService.sendMessage(mobile, msg);
 			}
@@ -108,6 +108,31 @@ public class MemberController extends BaseController {
 		return ResponseWrapper.succeed(token);
 	}
 	
+	@ApiOperation("店员手机注册/登录")
+	@PostMapping("/joinShopAssistantWithMobile.sec")
+	public ResponseWrapper<String> joinShopAssistantWithMobile(
+			@RequestParam String mobile, 
+			@RequestParam String openId,
+			@RequestParam String smsCaptcha,
+			@RequestParam Long shopId
+			) {
+		
+		String realCaptcha = redisClient.get(getSMSCaptchaKey(mobile));
+		if (!smsCaptcha.equalsIgnoreCase(realCaptcha)) {
+			
+			return ResponseWrapper.fail(ErrorCodes.CAPTCHA_ERROR);
+		}
+		
+		ResponseWrapper<Member> resp = memberApiService.joinShopAssistantWithMobile(mobile, openId, shopId);
+		if (resp.isFailed()) {
+			return ResponseWrapper.fail(resp.getHead());
+		}
+		
+		String token = genToken(resp.getBody());
+		
+		return ResponseWrapper.succeed(token);
+	}
+	
 	@ApiOperation("是否是卖家")
 	@PostMapping("/isSeller")
 	public ResponseWrapper<Boolean> isSeller(@RequestParam String token) {
@@ -118,6 +143,20 @@ public class MemberController extends BaseController {
 		}
 		
 		ResponseWrapper<Boolean> resp = memberApiService.isSeller(memberId);
+		
+		return resp;
+	}
+	
+	@ApiOperation("是否是店员")
+	@PostMapping("/isShopAssistant")
+	public ResponseWrapper<Boolean> isShopAssistant(@RequestParam String token) {
+		Long memberId = getMemberId(token);
+		
+		if (null == memberId) {
+			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
+		}
+		
+		ResponseWrapper<Boolean> resp = memberApiService.isShopAssistant(memberId);
 		
 		return resp;
 	}

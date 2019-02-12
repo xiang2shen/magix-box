@@ -11,7 +11,7 @@ import com.magicbox.mqtt.MqttClient;
 public class MqttConfig {
 	
 	private static final String BROKER_URL = "tcp://39.104.76.187:1883";
-	private static final String CLIENT_ID = "hequ-app";
+	private static final String CLIENT_ID = "hequ-app1";
 	private static final String USERNAME = "hequ";
 	private static final String PASSWORD = "fedF451HIKK3etnwv5GEAHRE";
 	

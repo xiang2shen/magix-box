@@ -4,16 +4,23 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public enum FrameStatusEnum {
-	OFFLINE(1, "离线"),
-	ONLINE(10, "在线");
+/**
+ * 店员状态枚举
+ * 
+ * @author xiangshuo
+ * 
+ */
+public enum ShopAssistantStatusEnum {
+	UNCHECK(1, "待审核"),
+	CHECK_FAILURE(5, "审核驳回"),
+	CHECK_SUCCESS(10, "审核通过");
 
 	
 	private static final Map<Integer, String> VALUES_MAP;
 	
 	static {
 		Map<Integer, String> map = new LinkedHashMap<>();
-		for (FrameStatusEnum each : values()) {
+		for (ShopAssistantStatusEnum each : values()) {
 			map.put(each.getCode(), each.getName());
 		}
 		VALUES_MAP = Collections.unmodifiableMap(map);
@@ -22,7 +29,7 @@ public enum FrameStatusEnum {
 	private Integer code;
 	private String name;
 	
-	private FrameStatusEnum(Integer code, String name) {
+	private ShopAssistantStatusEnum(Integer code, String name) {
 		this.code = code;
 		this.name = name;
 	}
@@ -38,8 +45,8 @@ public enum FrameStatusEnum {
 		return VALUES_MAP;
 	}
 	
-	public static FrameStatusEnum getEnumByCode(Integer code) {
-		for (FrameStatusEnum each : values()) {
+	public static ShopAssistantStatusEnum getEnumByCode(Integer code) {
+		for (ShopAssistantStatusEnum each : values()) {
 			if (each.getCode().equals(code)) {
 				return each;
 			}
@@ -48,7 +55,7 @@ public enum FrameStatusEnum {
 	}
 	
 	public static String getNameByCode(Integer code) {
-		FrameStatusEnum en = getEnumByCode(code);
+		ShopAssistantStatusEnum en = getEnumByCode(code);
 		if (null != en) {
 			return en.getName();
 		}

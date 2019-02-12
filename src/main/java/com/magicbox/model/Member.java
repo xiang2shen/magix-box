@@ -1,39 +1,61 @@
 package com.magicbox.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
 
+@ApiModel("")
 public class Member implements Serializable {
+    @ApiModelProperty("")
     private Long id;
 
+    @ApiModelProperty("卖家ID")
     private Long sellerId;
 
+    @ApiModelProperty("店员ID")
+    private Long shopAssistantId;
+
+    @ApiModelProperty("微信/支付宝openId")
     private String openId;
 
+    @ApiModelProperty("身份证号")
     private String idCard;
 
+    @ApiModelProperty("真实姓名")
     private String realname;
 
+    @ApiModelProperty("昵称")
     private String nickname;
 
+    @ApiModelProperty("性别")
     private Integer gender;
 
+    @ApiModelProperty("出生日期")
     private Date birthDate;
 
+    @ApiModelProperty("邮箱")
     private String email;
 
+    @ApiModelProperty("头像照片")
     private String photo;
 
+    @ApiModelProperty("注册时间")
     private Date registerTime;
 
+    @ApiModelProperty("最近登录时间")
     private Date lastLoginTime;
 
+    @ApiModelProperty("")
     private Date createTime;
 
+    @ApiModelProperty("")
     private Date updateTime;
 
+    @ApiModelProperty("")
     private String createUser;
 
+    @ApiModelProperty("")
     private String updateUser;
 
     private static final long serialVersionUID = 1L;
@@ -52,6 +74,14 @@ public class Member implements Serializable {
 
     public void setSellerId(Long sellerId) {
         this.sellerId = sellerId;
+    }
+
+    public Long getShopAssistantId() {
+        return shopAssistantId;
+    }
+
+    public void setShopAssistantId(Long shopAssistantId) {
+        this.shopAssistantId = shopAssistantId;
     }
 
     public String getOpenId() {
@@ -174,6 +204,7 @@ public class Member implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", sellerId=").append(sellerId);
+        sb.append(", shopAssistantId=").append(shopAssistantId);
         sb.append(", openId=").append(openId);
         sb.append(", idCard=").append(idCard);
         sb.append(", realname=").append(realname);

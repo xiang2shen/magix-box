@@ -1,7 +1,5 @@
 package com.magicbox.service.api;
 
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +29,11 @@ public class FrameApiService {
 		Frame frame = frameService.selectOneByFrameCode(frameCode);
 		if (null == frame) {
 			
-			Date now = new Date();
-			
 			frame = new Frame();
 			frame.setFrameCode(frameCode);
-			frame.setFrameStatus(FrameStatusEnum.UNBIND.getCode());
-			frame.setCreateTime(now);
-			frame.setUpdateTime(now);
+			frame.setFrameStatus(FrameStatusEnum.OFFLINE.getCode());
 			
-			frameMapper.insert(frame);
+			frameMapper.insertSelective(frame);
 		}
 		
 		
