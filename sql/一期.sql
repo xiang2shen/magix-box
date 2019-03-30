@@ -318,3 +318,34 @@ CREATE TABLE `t_mem_shop_assistant` (
   KEY `idx_seller_id` (`seller_id`),
   UNIQUE KEY `uk_assistant_mobile` (`assistant_mobile`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='店员';
+
+DROP TABLE IF EXISTS `t_prd_simcard`;
+CREATE TABLE `t_prd_simcard` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT,
+  `shop_id` bigint(18) NULL COMMENT '绑定店铺ID',
+  `card_code` varchar(64) NOT NULL COMMENT '卡号',
+  `card_status` tinyint(4) NOT NULL COMMENT '状态(1-正常,0-冻结)',
+  `iccid` varchar(64) NOT NULL COMMENT '集成电路卡识别码',
+  `network_operator` varchar(64) NOT NULL COMMENT '运营商',
+  `price` int(11) NOT NULL COMMENT '价格(单位：分)',
+  `time_limit` int(11) NULL COMMENT '时限(单位：秒)',
+  `start_time` datetime NOT NULL COMMENT '开始时间',
+  `end_time` datetime NOT NULL COMMENT '结束时间',
+  `open_time` datetime NULL COMMENT '开通时间',
+  
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `create_user` varchar(32) DEFAULT NULL,
+  `update_user` varchar(32) DEFAULT NULL,
+  
+  PRIMARY KEY (`id`),
+  KEY `idx_shop_id` (`shop_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='SIM卡';
+
+ALTER TABLE `t_shop_frame` 
+ADD COLUMN `network_operator` varchar(64) NULL COMMENT '运营商',
+ADD COLUMN `price` int(11) NULL COMMENT '价格(单位：分)',
+ADD COLUMN `time_limit` int(11) NULL COMMENT '时限(单位：秒)',
+ADD COLUMN `start_time` datetime NULL COMMENT '开始时间',
+ADD COLUMN `end_time` datetime NULL COMMENT '结束时间',
+ADD COLUMN `open_time` datetime NULL COMMENT '开通时间';

@@ -205,7 +205,7 @@ public class MemberApiService {
 		BeanChecker.getInstance().notNull(memberId);
 		
 		Member member = memberMapper.selectByPrimaryKey(memberId);
-		if (null != member && null != member.getShopAssistantId()) {
+		if (null == member) {
 			return ResponseWrapper.fail(ErrorCodes.MEMBER_NOT_FOUND);
 		}
 		

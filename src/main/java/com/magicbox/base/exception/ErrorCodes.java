@@ -21,6 +21,7 @@ public enum ErrorCodes implements ResponseHead {
 	WEIXIN_ID_EXIST("MEM10012", "微信ID已绑定"),
 	NOT_SELLER("MEM10020", "该会员不是卖家"),
 	NO_AUTH("MEM10021", "无权操作"),
+	NOT_SHOP_ASSISTANT("MEM10022", "该会员不是店员"),
 	SHOP_NOT_FOUND("SHOP10021", "该店铺不存在"),
 	SHOP_NOT_BELONG_TO_SELLER("SHOP10022", "该店铺不属于当前卖家"),
 	PRODUCT_NOT_FOUND("PRD10023", "该商品不存在"),

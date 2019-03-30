@@ -66,4 +66,23 @@ public class SellerApiService {
 		shopAssistantService.updateStatus(shopAssistantId, isSuccess ? ShopAssistantStatusEnum.CHECK_SUCCESS : ShopAssistantStatusEnum.CHECK_FAILURE);
 		return ResponseWrapper.succeed();
 	}
+
+	public ResponseWrapper<?> deleteShopAssistant(Long memberId, Long shopAssistantId) {
+		BeanChecker.getInstance().notNull(memberId).notNull(shopAssistantId);
+		
+		Seller seller = memberApiService.findSellerByMemberId(memberId).getBody();
+		if (null == seller) {
+			return ResponseWrapper.fail(ErrorCodes.NOT_SELLER);
+		}
+		
+		ShopAssistant assistant = shopAssistantMapper.selectByPrimaryKey(shopAssistantId);
+		if (null == assistant || ! assistant.getSellerId().equals(seller.getId())) {
+			return ResponseWrapper.fail(ErrorCodes.NO_AUTH);
+		}
+		
+		Member assistantMember = memberService.selectOneByShopAssistantId(shopAssistantId);
+		
+		memberService.deleteShopAssistantId(assistantMember.getId());
+		return ResponseWrapper.succeed();
+	}
 }

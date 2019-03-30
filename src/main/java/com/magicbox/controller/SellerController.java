@@ -53,4 +53,20 @@ public class SellerController extends BaseController {
 		
 		return sellerApiService.checkShopAssistant(memberId, shopAssistantId, isSuccess);
 	}
+	
+	@ApiOperation("删除店员")
+	@PostMapping("/deleteShopAssistant")
+	public ResponseWrapper<?> deleteShopAssistant(
+			@RequestParam String token,
+			@RequestParam Long shopAssistantId
+			) {
+		
+		Long memberId = getMemberId(token);
+		
+		if (null == memberId) {
+			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
+		}
+		
+		return sellerApiService.deleteShopAssistant(memberId, shopAssistantId);
+	}
 }

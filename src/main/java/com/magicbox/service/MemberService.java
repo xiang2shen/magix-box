@@ -78,4 +78,10 @@ public class MemberService {
 		return XCollectionUtils.getFirstElement(memberMapper.selectByExample(example));
 	}
 
+	public void deleteShopAssistantId(Long memberId) {
+		Member member = memberMapper.selectByPrimaryKey(memberId);
+		member.setShopAssistantId(null);
+		memberMapper.updateByPrimaryKey(member);
+	}
+
 }

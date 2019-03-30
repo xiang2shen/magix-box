@@ -239,4 +239,19 @@ public class BoxApiService {
 		
 		return ResponseWrapper.succeed();
 	}
+
+
+	public ResponseWrapper<?> triggerUpdateStock(Long memberId, String frameCode) {
+		BeanChecker.getInstance().notNull(memberId).notBlank(frameCode);
+		
+		// 校验卖家
+		Seller seller = memberApiService.findSellerByMemberId(memberId).getBody();
+		if (null == seller) {
+			return ResponseWrapper.fail(ErrorCodes.NOT_SELLER);
+		}
+		
+		mqttClient.publish(MqttConstants.TOPIC_TRIGGER_SYN_STOCK + frameCode, "1");
+		
+		return ResponseWrapper.succeed();
+	}
 }

@@ -108,4 +108,20 @@ public class BoxController extends BaseController {
 		
 		return boxApiService.createBox(memberId, box);
 	}
+	
+	@ApiOperation("触发同步库存")
+	@PostMapping("/triggerUpdateStock")
+	public ResponseWrapper<?> triggerUpdateStock(
+			@RequestParam String token,
+			@RequestParam String frameCode
+			) {
+		
+		Long memberId = getMemberId(token);
+		
+		if (null == memberId) {
+			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
+		}
+		
+		return boxApiService.triggerUpdateStock(memberId, frameCode);
+	}
 }
