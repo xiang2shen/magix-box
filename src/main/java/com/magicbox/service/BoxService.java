@@ -106,5 +106,12 @@ public class BoxService {
 		
 		return boxMapper.selectByExample(example);
 	}
+
+	public void deleteByFrameCode(String frameCode) {
+		BoxExample example = new BoxExample();
+		example.or().andFrameCodeEqualTo(frameCode);
+		
+		boxMapper.deleteByExample(example);
+	}
 	
 }

@@ -250,6 +250,8 @@ public class BoxApiService {
 			return ResponseWrapper.fail(ErrorCodes.NOT_SELLER);
 		}
 		
+		boxService.deleteByFrameCode(frameCode);
+		
 		mqttClient.publish(MqttConstants.TOPIC_TRIGGER_SYN_STOCK + frameCode, "1");
 		
 		return ResponseWrapper.succeed();
