@@ -22,6 +22,7 @@ public enum ErrorCodes implements ResponseHead {
 	NOT_SELLER("MEM10020", "该会员不是卖家"),
 	NO_AUTH("MEM10021", "无权操作"),
 	NOT_SHOP_ASSISTANT("MEM10022", "该会员不是店员"),
+	
 	SHOP_NOT_FOUND("SHOP10021", "该店铺不存在"),
 	SHOP_NOT_BELONG_TO_SELLER("SHOP10022", "该店铺不属于当前卖家"),
 	PRODUCT_NOT_FOUND("PRD10023", "该商品不存在"),
@@ -31,7 +32,11 @@ public enum ErrorCodes implements ResponseHead {
 	BOX_NO_PRODUCT("BOX10027", "该盒子没有商品"),
 	ORDER_NOT_FOUND("ORD10028", "该订单不存在"),
 	MAP_API_ERROR("MAP10029", "地图接口失败"),
-	FRAME_HEALTH_ERROR("ORD10030", "设备故障");
+	FRAME_HEALTH_ERROR("ORD10030", "设备故障"),
+	FRAME_NOT_FOUND("BOX10031", "该设备不存在"),
+	FRAME_ALREADY_BIND("BOX10032", "该设备已绑定其他店铺");
+	
+	
 	
 	
 	

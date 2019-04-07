@@ -293,4 +293,11 @@ public class ShopApiService {
 		List<ShopTag> tagList = shopTagService.selectList();
 		return ResponseWrapper.succeed(tagList);
 	}
+
+	public ResponseWrapper<Page<Shop>> findShopPageConditionally(String shopName, Integer pageNo, Integer pageSize) {
+		BeanChecker.getInstance().page(pageNo, pageSize);
+		
+		Page<Shop> shopPage = shopService.selectPageConditionally(shopName, pageNo, pageSize);
+		return ResponseWrapper.succeed(shopPage);
+	}
 }

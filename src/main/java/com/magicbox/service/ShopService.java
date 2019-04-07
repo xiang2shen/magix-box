@@ -87,4 +87,5 @@ public class ShopService {
 		
 		return shopMapper.selectByExample(example);
 	}
+
 }

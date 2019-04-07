@@ -42,7 +42,7 @@ public class CmsUserController extends BaseController {
 		if (null == user) {
 			return ResponseWrapper.fail(ErrorCodes.MEMBER_NOT_FOUND);
 		}
-		if (!password.equalsIgnoreCase(MD5Utils.encrypt(user.getPassword()))) {
+		if (!MD5Utils.encrypt(password).equalsIgnoreCase(user.getPassword())) {
 			return ResponseWrapper.fail(ErrorCodes.PASSWORD_ERROR);
 		}
 		String token = genToken(user);

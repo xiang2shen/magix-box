@@ -46,8 +46,8 @@ public class CmsBoxController extends BaseController {
 			@RequestParam(required = false) String frameModel
 			) {
 		
-		Long memberId = getMemberId(token);
-		if (null == memberId) {
+		Long userId = getUserId(token);
+		if (null == userId) {
 			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
 		}
 		
@@ -67,8 +67,8 @@ public class CmsBoxController extends BaseController {
 			@RequestParam(required = false) String frameModel
 			) {
 		
-		Long memberId = getMemberId(token);
-		if (null == memberId) {
+		Long userId = getUserId(token);
+		if (null == userId) {
 			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
 		}
 		
@@ -89,8 +89,8 @@ public class CmsBoxController extends BaseController {
 			@RequestParam Integer pageSize
 			) {
 		
-		Long memberId = getMemberId(token);
-		if (null == memberId) {
+		Long userId = getUserId(token);
+		if (null == userId) {
 			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
 		}
 		
@@ -106,8 +106,8 @@ public class CmsBoxController extends BaseController {
 			@RequestParam Long frameId
 			) {
 		
-		Long memberId = getMemberId(token);
-		if (null == memberId) {
+		Long userId = getUserId(token);
+		if (null == userId) {
 			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
 		}
 		
@@ -131,8 +131,8 @@ public class CmsBoxController extends BaseController {
 			@RequestParam Integer capacity
 			) {
 		
-		Long memberId = getMemberId(token);
-		if (null == memberId) {
+		Long userId = getUserId(token);
+		if (null == userId) {
 			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
 		}
 		
@@ -156,8 +156,8 @@ public class CmsBoxController extends BaseController {
 			@RequestParam Integer capacity
 			) {
 		
-		Long memberId = getMemberId(token);
-		if (null == memberId) {
+		Long userId = getUserId(token);
+		if (null == userId) {
 			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
 		}
 		
@@ -178,8 +178,8 @@ public class CmsBoxController extends BaseController {
 			@RequestParam Long boxId
 			) {
 		
-		Long memberId = getMemberId(token);
-		if (null == memberId) {
+		Long userId = getUserId(token);
+		if (null == userId) {
 			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
 		}
 		
