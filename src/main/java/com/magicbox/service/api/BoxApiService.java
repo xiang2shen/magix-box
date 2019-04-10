@@ -251,7 +251,8 @@ public class BoxApiService {
 		}
 		
 		boxService.deleteByFrameCode(frameCode);
-		
+
+		logger.info("publish message [{}] to topick [{}]", 1, MqttConstants.TOPIC_TRIGGER_SYN_STOCK + frameCode);
 		mqttClient.publish(MqttConstants.TOPIC_TRIGGER_SYN_STOCK + frameCode, "1");
 		
 		return ResponseWrapper.succeed();

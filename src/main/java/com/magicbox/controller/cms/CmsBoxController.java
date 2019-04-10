@@ -1,5 +1,6 @@
 package com.magicbox.controller.cms;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -43,7 +44,9 @@ public class CmsBoxController extends BaseController {
 	public ResponseWrapper<Frame> createFrame(
 			@RequestParam String token,
 			@RequestParam String frameCode,
-			@RequestParam(required = false) String frameModel
+			@RequestParam(required = false) String frameModel,
+			@RequestParam(required = false) String internetFlow,
+			@RequestParam(required = false) Date productTime
 			) {
 		
 		Long userId = getUserId(token);
@@ -53,7 +56,10 @@ public class CmsBoxController extends BaseController {
 		
 		Frame frame = new Frame();
 		frame.setFrameCode(frameCode);
+		frame.setFrameStatus(1);
 		frame.setFrameModel(frameModel);
+		frame.setInternetFlow(internetFlow);
+		frame.setProductTime(productTime);
 		frameMapper.insertSelective(frame);
 		
 		return ResponseWrapper.succeed(frame);
@@ -64,7 +70,9 @@ public class CmsBoxController extends BaseController {
 	public ResponseWrapper<Frame> updateFrame(
 			@RequestParam String token,
 			@RequestParam Long frameId,
-			@RequestParam(required = false) String frameModel
+			@RequestParam(required = false) String frameModel,
+			@RequestParam(required = false) String internetFlow,
+			@RequestParam(required = false) Date productTime
 			) {
 		
 		Long userId = getUserId(token);
@@ -75,16 +83,17 @@ public class CmsBoxController extends BaseController {
 		Frame frame = new Frame();
 		frame.setId(frameId);
 		frame.setFrameModel(frameModel);
+		frame.setInternetFlow(internetFlow);
+		frame.setProductTime(productTime);
 		frameMapper.updateByPrimaryKeySelective(frame);
 		
 		return ResponseWrapper.succeed(frame);
 	}
 	
 	@ApiOperation("查询框架列表")
-	@PostMapping("/listFrame")
-	public ResponseWrapper<Page<Frame>> listFrame(
+	@PostMapping("/listFrames")
+	public ResponseWrapper<Page<Frame>> listFrames(
 			@RequestParam String token,
-			@RequestParam(required = false) String frameCode,
 			@RequestParam Integer pageNo,
 			@RequestParam Integer pageSize
 			) {
@@ -94,9 +103,24 @@ public class CmsBoxController extends BaseController {
 			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
 		}
 		
-		Page<Frame> page = frameService.selectPage(frameCode, pageNo, pageSize);
+		Page<Frame> framePage = frameService.selectPage(pageNo, pageSize);
+		return ResponseWrapper.succeed(framePage);
+	}
+	
+	@ApiOperation("查询店铺下的框架列表")
+	@PostMapping("/listFrameByShopCode")
+	public ResponseWrapper<List<Frame>> listFrameByShopCode(
+			@RequestParam String token,
+			@RequestParam String shopCode
+			) {
 		
-		return ResponseWrapper.succeed(page);
+		Long userId = getUserId(token);
+		if (null == userId) {
+			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
+		}
+		
+		List<Frame> frames = frameService.selectListByShopCode(shopCode);
+		return ResponseWrapper.succeed(frames);
 	}
 	
 	@ApiOperation("查询框架详情")
@@ -141,6 +165,7 @@ public class CmsBoxController extends BaseController {
 		box.setBoxCode(boxCode);
 		box.setBoxPosition(boxPosition);
 		box.setCapacity(capacity);
+		box.setBoxStatus(1);
 		boxMapper.insertSelective(box);
 		
 		return ResponseWrapper.succeed(box);
@@ -169,6 +194,23 @@ public class CmsBoxController extends BaseController {
 		boxMapper.updateByPrimaryKeySelective(box);
 		
 		return ResponseWrapper.succeed(box);
+	}
+	
+	@ApiOperation("查询盒子列表")
+	@PostMapping("/listBoxes")
+	public ResponseWrapper<List<Box>> listBoxes(
+			@RequestParam String token,
+			@RequestParam String frameCode
+			) {
+		
+		Long userId = getUserId(token);
+		if (null == userId) {
+			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
+		}
+		
+		List<Box> boxes = boxService.selectListByFrameCode(frameCode);
+		
+		return ResponseWrapper.succeed(boxes);
 	}
 	
 	@ApiOperation("查询盒子详情")
