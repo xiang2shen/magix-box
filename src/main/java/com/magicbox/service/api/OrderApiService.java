@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.magicbox.model.*;
+import com.magicbox.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,21 +27,7 @@ import com.magicbox.base.utilities.XBeanUtils;
 import com.magicbox.dto.OrderDTO;
 import com.magicbox.mapper.MemberMapper;
 import com.magicbox.mapper.OrderMapper;
-import com.magicbox.model.Box;
-import com.magicbox.model.FrameHealthLog;
-import com.magicbox.model.Member;
-import com.magicbox.model.Order;
-import com.magicbox.model.Product;
-import com.magicbox.model.ProductImage;
-import com.magicbox.model.Seller;
-import com.magicbox.model.Shop;
 import com.magicbox.mqtt.MqttClient;
-import com.magicbox.service.BoxService;
-import com.magicbox.service.FrameHealthLogService;
-import com.magicbox.service.OrderService;
-import com.magicbox.service.ProductImageService;
-import com.magicbox.service.ProductService;
-import com.magicbox.service.ShopService;
 
 @Service
 public class OrderApiService {
@@ -61,6 +49,8 @@ public class OrderApiService {
 	private OrderMapper orderMapper;
 	@Autowired
 	private OrderService orderService;
+	@Autowired
+	private FrameService frameService;
 	@Autowired
 	private ProductImageService productImageService;
 	@Autowired
@@ -130,8 +120,12 @@ public class OrderApiService {
 			return ResponseWrapper.fail(ErrorCodes.PRODUCT_NOT_FOUND);
 		}
 		List<ProductImage> productImageList = productImageService.selectListByProductCode(box.getProductCode());
-		
-		Shop shop = shopService.selectOneByShopCode(box.getShopCode());
+
+		Frame frame = frameService.selectOneByFrameCode(box.getFrameCode());
+		if (frame == null) {
+			return ResponseWrapper.fail(ErrorCodes.FRAME_NOT_FOUND);
+		}
+		Shop shop = shopService.selectOneByShopCode(frame.getShopCode());
 		if (null == shop) {
 			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_FOUND);
 		}

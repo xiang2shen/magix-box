@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.magicbox.model.*;
+import com.magicbox.service.FrameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +17,6 @@ import com.magicbox.base.exception.ErrorCodes;
 import com.magicbox.base.support.ResponseWrapper;
 import com.magicbox.base.utilities.BeanChecker;
 import com.magicbox.mapper.BoxMapper;
-import com.magicbox.model.Box;
-import com.magicbox.model.Product;
-import com.magicbox.model.Seller;
-import com.magicbox.model.Shop;
 import com.magicbox.mqtt.MqttClient;
 import com.magicbox.service.BoxService;
 import com.magicbox.service.ProductService;
@@ -40,6 +38,8 @@ public class BoxApiService {
 	private ShopService shopService;
 	@Autowired
 	private MemberApiService memberApiService;
+	@Autowired
+	private FrameService frameService;
 	@Autowired
 	private MqttClient mqttClient;
 	
@@ -71,10 +71,7 @@ public class BoxApiService {
 		if (!shop.getSellerId().equals(seller.getId())) {
 			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_BELONG_TO_SELLER);
 		}
-		if (!shop.getShopCode().equals(box.getShopCode())) {
-			return ResponseWrapper.fail(ErrorCodes.BOX_NOT_BELONG_TO_SHOP);
-		}
-		
+
 		boxService.updateProductCodeByBoxCode(productCode, boxCode);
 		
 		return ResponseWrapper.succeed(boxService.selectOneByBoxCode(boxCode));
@@ -97,10 +94,7 @@ public class BoxApiService {
 		if (!shop.getSellerId().equals(seller.getId())) {
 			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_BELONG_TO_SELLER);
 		}
-		if (!shop.getShopCode().equals(box.getShopCode())) {
-			return ResponseWrapper.fail(ErrorCodes.BOX_NOT_BELONG_TO_SHOP);
-		}
-		
+
 		String boxCode = "BOX" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 		Date now = new Date();
 		
@@ -119,13 +113,15 @@ public class BoxApiService {
 
 	public ResponseWrapper<Box> createOrUpdateBox(String frameCode, String boxCode, Integer boxPosition, Integer capacity, Integer stock) {
 		BeanChecker.getInstance().notBlank(frameCode).notBlank(boxCode).positive(capacity).positive(stock);
-		
+
+		Frame frame = frameService.selectOneByFrameCode(frameCode);
 		Box box = boxService.selectOneByBoxCode(boxCode);
 		if (null == box) {
 			
 			box = new Box();
 			Date now = new Date();
-			
+
+			box.setShopCode(frame.getShopCode());
 			box.setFrameCode(frameCode);
 			box.setBoxCode(boxCode);
 			box.setCapacity(capacity);
@@ -137,7 +133,8 @@ public class BoxApiService {
 			
 			boxMapper.insert(box);
 		} else {
-			
+
+			box.setShopCode(frame.getShopCode());
 			box.setFrameCode(frameCode);	// 更新设备号
 			box.setProductStock(stock);
 			boxMapper.updateByPrimaryKeySelective(box);
@@ -187,7 +184,11 @@ public class BoxApiService {
 		}
 		
 		// 校验店铺是否相同
-		Shop shop = shopService.selectOneByShopCode(box.getShopCode());
+		Frame frame = frameService.selectOneByFrameCode(box.getFrameCode());
+		if (null == frame) {
+			return ResponseWrapper.fail(ErrorCodes.FRAME_NOT_FOUND);
+		}
+		Shop shop = shopService.selectOneByShopCode(frame.getShopCode());
 		if (null == shop) {
 			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_FOUND);
 		}
@@ -218,7 +219,11 @@ public class BoxApiService {
 		}
 		
 		// 校验店铺是否相同
-		Shop shop = shopService.selectOneByShopCode(box.getShopCode());
+		Frame frame = frameService.selectOneByFrameCode(box.getFrameCode());
+		if (null == frame) {
+			return ResponseWrapper.fail(ErrorCodes.FRAME_NOT_FOUND);
+		}
+		Shop shop = shopService.selectOneByShopCode(frame.getShopCode());
 		if (null == shop) {
 			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_FOUND);
 		}

@@ -2,7 +2,7 @@ package com.magicbox.base.constants;
 
 public interface MqttConstants {
 	
-	String TOPIC_TRIGGER_SYN_STOCK = "triggerSynStock";
+	String TOPIC_TRIGGER_SYN_STOCK = "notifySynStock/";
 	String TOPIC_SYN_STOCK = "synStock";
 	String TOPIC_PANG = "pang";
 	String TOPIC_OPEN_RESULT = "openResult";
