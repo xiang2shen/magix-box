@@ -1,20 +1,5 @@
 package com.magicbox.service.api;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.magicbox.model.*;
-import com.magicbox.service.*;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.magicbox.base.constants.MqttConstants;
 import com.magicbox.base.constants.OrderStatusEnum;
 import com.magicbox.base.constants.PaymentWayEnum;
@@ -27,7 +12,21 @@ import com.magicbox.base.utilities.XBeanUtils;
 import com.magicbox.dto.OrderDTO;
 import com.magicbox.mapper.MemberMapper;
 import com.magicbox.mapper.OrderMapper;
+import com.magicbox.model.*;
 import com.magicbox.mqtt.MqttClient;
+import com.magicbox.service.*;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderApiService {
@@ -131,7 +130,7 @@ public class OrderApiService {
 		}
 		
 		// 设备健康检查
-		if (!checkFrameHealth(box)) {
+		if (!frameHealthLogService.checkFrameHealth(box)) {
 			return ResponseWrapper.fail(ErrorCodes.FRAME_HEALTH_ERROR);
 		}
 		
@@ -176,24 +175,6 @@ public class OrderApiService {
 		return ResponseWrapper.succeed(payStr);
 	}
 
-	private boolean checkFrameHealth(Box box) {
-		FrameHealthLog frameHealthLog = null;
-		int loopTimes = 0;
-		do {
-			
-			frameHealthLog = frameHealthLogService.selectOneByFrameCodeAndRecentSecond(box.getFrameCode(), 60);
-			if (null == frameHealthLog) {
-				mqttClient.publish(MqttConstants.TOPIC_PING + box.getFrameCode(), box.getBoxCode());
-				
-				try {
-					Thread.sleep(500L);
-				} catch (InterruptedException e) {}
-			}
-		} while (null == frameHealthLog || loopTimes++ > 10);
-		
-		return null != frameHealthLog;
-	}
-	
 	public ResponseWrapper<?> doAfterPay(String orderCode, String payCode) {
 		BeanChecker.getInstance().notBlank(orderCode);
 		

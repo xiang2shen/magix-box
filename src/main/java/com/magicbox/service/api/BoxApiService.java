@@ -112,7 +112,7 @@ public class BoxApiService {
 	}
 
 	public ResponseWrapper<Box> createOrUpdateBox(String frameCode, String boxCode, Integer boxPosition, Integer capacity, Integer stock) {
-		BeanChecker.getInstance().notBlank(frameCode).notBlank(boxCode).positive(capacity).positive(stock);
+		BeanChecker.getInstance().notBlank(frameCode).notBlank(boxCode).positive(capacity).positiveOrZero(stock);
 
 		Frame frame = frameService.selectOneByFrameCode(frameCode);
 		Box box = boxService.selectOneByBoxCode(boxCode);
@@ -255,7 +255,7 @@ public class BoxApiService {
 			return ResponseWrapper.fail(ErrorCodes.NOT_SELLER);
 		}
 		
-		boxService.deleteByFrameCode(frameCode);
+		boxService.unbindWithFrame(frameCode);
 
 		logger.info("publish message [{}] to topick [{}]", 1, MqttConstants.TOPIC_TRIGGER_SYN_STOCK + frameCode);
 		mqttClient.publish(MqttConstants.TOPIC_TRIGGER_SYN_STOCK + frameCode, "1");

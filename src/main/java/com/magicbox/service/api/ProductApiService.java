@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.magicbox.base.constants.MqttConstants;
+import com.magicbox.mqtt.MqttClient;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -68,7 +70,9 @@ public class ProductApiService {
 	private ProductTagRelService productTagRelService;
 	@Autowired
 	private ProductTagRelMapper productTagRelMapper;
-	
+	@Autowired
+	private MqttClient mqttClient;
+
 	public ResponseWrapper<Page<ProductDTO>> findProductPageByShopCode(String shopCode, Integer pageNo, Integer pageSize) {
 		BeanChecker.getInstance().notBlank(shopCode).page(pageNo, pageSize);
 		
@@ -225,6 +229,8 @@ public class ProductApiService {
 		if (null == product) {
 			return ResponseWrapper.fail(ErrorCodes.PRODUCT_NOT_FOUND);
 		}
+
+		mqttClient.publish(MqttConstants.TOPIC_PING + box.getFrameCode(), box.getBoxCode());
 		
 		ProductInBoxDTO dto = new ProductInBoxDTO();
 		dto.setProduct(product);

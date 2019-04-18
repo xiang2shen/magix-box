@@ -68,7 +68,7 @@ public class BoxService {
 			
 			Box record = new Box();
 			record.setId(box.getId());
-			record.setProductStock(record.getProductStock() - productQuantity >= 0 ? record.getProductStock() - productQuantity : 0);
+			record.setProductStock(box.getProductStock() - productQuantity >= 0 ? box.getProductStock() - productQuantity : 0);
 			
 			boxMapper.updateByPrimaryKeySelective(record);
 		}
@@ -113,5 +113,15 @@ public class BoxService {
 		
 		boxMapper.deleteByExample(example);
 	}
-	
+
+	public void unbindWithFrame(String frameCode) {
+		List<Box> boxes = selectListByFrameCode(frameCode);
+		if (boxes != null) {
+			boxes.forEach(box -> {
+				box.setFrameCode(null);
+				box.setShopCode(null);
+				boxMapper.updateByPrimaryKey(box);
+			});
+		}
+	}
 }

@@ -111,7 +111,7 @@ DROP TABLE IF EXISTS `t_shop_box`;
 CREATE TABLE `t_shop_box` (
   `id` bigint(18) NOT NULL AUTO_INCREMENT,
   `shop_code` varchar(32) NULL COMMENT '店铺编号',
-  `frame_code` varchar(32) NOT NULL COMMENT '框架编号',
+  `frame_code` varchar(32) NULL COMMENT '框架编号',
   `box_code` varchar(32) NOT NULL COMMENT '盒子编号',
   `product_code` varchar(32) NULL COMMENT '商品编号',
   `box_position` int(11) NULL COMMENT '盒子位置',
