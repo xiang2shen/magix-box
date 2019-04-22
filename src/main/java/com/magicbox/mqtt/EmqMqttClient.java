@@ -42,6 +42,9 @@ public class EmqMqttClient implements MqttClient {
 			MqttMessage message = new MqttMessage(content.getBytes());
 			message.setQos(qos);
 			client.publish(topic, message);
+			if (logger.isDebugEnabled()) {
+				logger.debug("发送消息[{}]到主题[{}]成功", topic, content, qos);
+			}
 			return true;
 		} catch (MqttException e) {
 			logger.error("发送消息[{}]到主题[{}]失败", content, topic, e);

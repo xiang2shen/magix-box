@@ -14,7 +14,7 @@ public enum OrderStatusEnum {
 	UNPAY(1, "未支付"),
 	PAY(10, "已支付"),
 	UNDONE(50, "未取货完成"),
-	DONE(100, "取货完成");
+	DONE(100, "已完成");
 
 	
 	private static final Map<Integer, String> VALUES_MAP;

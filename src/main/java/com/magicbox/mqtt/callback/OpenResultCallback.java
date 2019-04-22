@@ -2,6 +2,8 @@ package com.magicbox.mqtt.callback;
 
 import java.util.List;
 
+import com.magicbox.base.constants.OrderStatusEnum;
+import com.magicbox.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +19,9 @@ public class OpenResultCallback extends AbstractMqttCallback {
 	
 	@Autowired
 	private BoxService boxService;
-	
+	@Autowired
+	private OrderService orderService;
+
 	@Override
 	public void callback(String topic, String message) {
 		log.debug("mqtt消息到达,topic={}", topic);
@@ -32,12 +36,14 @@ public class OpenResultCallback extends AbstractMqttCallback {
 		Integer sign = Integer.parseInt(params.get(2));
 		String boxCode = params.get(3);
 		Integer stock = Integer.parseInt(params.get(4));
-		
-		boxService.updateStockByBoxCode(boxCode, stock);
-		
+
 		if (SUCCESS_SIGN != sign) {
 			log.error("货架[{}]上的盒子[{}]下单开锁失败,sign={}, orderCode={}", frameCode, boxCode, sign, orderCode);
+			return;
 		}
+
+		orderService.updateStatusByOrderCode(orderCode, null, OrderStatusEnum.PAY, OrderStatusEnum.DONE);
+		boxService.updateStockByBoxCode(boxCode, stock);
 	}
 
 }
