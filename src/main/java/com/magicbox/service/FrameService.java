@@ -61,4 +61,11 @@ public class FrameService {
 		example.initPage(pageNo, pageSize);
 		return selectPageByExample(example);
 	}
+
+    public Frame updateNullShopCode(Long id) {
+		Frame frame = frameMapper.selectByPrimaryKey(id);
+		frame.setShopCode(null);
+		frameMapper.updateByPrimaryKey(frame);
+		return frame;
+    }
 }

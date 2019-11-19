@@ -1,21 +1,5 @@
 package com.magicbox.service.api;
 
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import com.magicbox.base.constants.MqttConstants;
-import com.magicbox.mqtt.MqttClient;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.magicbox.base.exception.ErrorCodes;
 import com.magicbox.base.support.Page;
 import com.magicbox.base.support.ResponseWrapper;
@@ -28,19 +12,23 @@ import com.magicbox.mapper.ProductImageMapper;
 import com.magicbox.mapper.ProductMapper;
 import com.magicbox.mapper.ProductTagMapper;
 import com.magicbox.mapper.ProductTagRelMapper;
-import com.magicbox.model.Box;
-import com.magicbox.model.Product;
-import com.magicbox.model.ProductImage;
-import com.magicbox.model.ProductTag;
-import com.magicbox.model.ProductTagRel;
-import com.magicbox.model.Seller;
-import com.magicbox.model.Shop;
-import com.magicbox.service.BoxService;
-import com.magicbox.service.ProductImageService;
-import com.magicbox.service.ProductService;
-import com.magicbox.service.ProductTagRelService;
-import com.magicbox.service.ProductTagService;
-import com.magicbox.service.ShopService;
+import com.magicbox.model.*;
+import com.magicbox.mqtt.MqttClient;
+import com.magicbox.service.*;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 @Service
 public class ProductApiService {
@@ -71,7 +59,11 @@ public class ProductApiService {
 	@Autowired
 	private ProductTagRelMapper productTagRelMapper;
 	@Autowired
+	private FrameHealthLogService frameHealthLogService;
+	@Autowired
 	private MqttClient mqttClient;
+	@Autowired
+	private ExecutorService executorService;
 
 	public ResponseWrapper<Page<ProductDTO>> findProductPageByShopCode(String shopCode, Integer pageNo, Integer pageSize) {
 		BeanChecker.getInstance().notBlank(shopCode).page(pageNo, pageSize);
@@ -230,8 +222,9 @@ public class ProductApiService {
 			return ResponseWrapper.fail(ErrorCodes.PRODUCT_NOT_FOUND);
 		}
 
-		mqttClient.publish(MqttConstants.TOPIC_PING + box.getFrameCode(), box.getBoxCode());
-		
+		// 设备健康检查-异步
+		executorService.execute(() -> frameHealthLogService.checkFrameHealth(box));
+
 		ProductInBoxDTO dto = new ProductInBoxDTO();
 		dto.setProduct(product);
 		dto.setBox(box);

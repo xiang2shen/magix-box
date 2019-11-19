@@ -68,4 +68,21 @@ public class FrameController extends BaseController {
 		
 		return frameApiService.bindShopWithFrame(memberId, shopCode, frameCode);
 	}
+
+	@ApiOperation("解绑店铺与设备")
+	@PostMapping("/unbindShopWithFrame")
+	public ResponseWrapper<?> unbindShopWithFrame(
+			@RequestParam String token,
+			@RequestParam String shopCode,
+			@RequestParam String frameCode
+	) {
+
+		Long memberId = getMemberId(token);
+
+		if (null == memberId) {
+			return ResponseWrapper.fail(ErrorCodes.INVALID_TOKEN);
+		}
+
+		return frameApiService.unbindShopWithFrame(memberId, shopCode, frameCode);
+	}
 }

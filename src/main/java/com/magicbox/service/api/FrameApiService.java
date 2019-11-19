@@ -1,5 +1,7 @@
 package com.magicbox.service.api;
 
+import com.magicbox.mapper.BoxMapper;
+import com.magicbox.service.BoxService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,9 @@ public class FrameApiService {
 	private MemberApiService memberApiService;
 	@Autowired
 	private ShopService shopService;
-	
+	@Autowired
+	private BoxService boxService;
+
 	public ResponseWrapper<Frame> createFrameWhenAbsent(String frameCode) {
 		BeanChecker.getInstance().notBlank(frameCode);
 		
@@ -75,6 +79,36 @@ public class FrameApiService {
 		}
 		
 		frameService.updateShopCode(frame.getId(), shopCode);
+		return ResponseWrapper.succeed();
+	}
+
+	public ResponseWrapper<?> unbindShopWithFrame(Long memberId, String shopCode, String frameCode) {
+		// 校验卖家
+		Seller seller = memberApiService.findSellerByMemberId(memberId).getBody();
+		if (null == seller) {
+			return ResponseWrapper.fail(ErrorCodes.NOT_SELLER);
+		}
+
+		// 校验店铺是否属于卖家
+		Shop shop = shopService.selectOneByShopCode(shopCode);
+		if (null == shop) {
+			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_FOUND);
+		}
+		if (!shop.getSellerId().equals(seller.getId())) {
+			return ResponseWrapper.fail(ErrorCodes.SHOP_NOT_BELONG_TO_SELLER);
+		}
+
+		// 校验设备是否没有绑定过其他店铺
+		Frame frame = frameService.selectOneByFrameCode(frameCode);
+		if (null == frame) {
+			return ResponseWrapper.fail(ErrorCodes.FRAME_NOT_FOUND);
+		}
+		if (StringUtils.isNotBlank(frame.getShopCode())) {
+			return ResponseWrapper.fail(ErrorCodes.FRAME_ALREADY_BIND);
+		}
+
+		frameService.updateNullShopCode(frame.getId());
+		boxService.unbindWithFrame(frameCode);
 		return ResponseWrapper.succeed();
 	}
 }
