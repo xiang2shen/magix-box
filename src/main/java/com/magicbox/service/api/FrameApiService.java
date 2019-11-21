@@ -99,13 +99,13 @@ public class FrameApiService {
 		}
 
 		// 校验设备是否没有绑定过其他店铺
-		Frame frame = frameService.selectOneByFrameCode(frameCode);
-		if (null == frame) {
-			return ResponseWrapper.fail(ErrorCodes.FRAME_NOT_FOUND);
-		}
-		if (StringUtils.isNotBlank(frame.getShopCode())) {
-			return ResponseWrapper.fail(ErrorCodes.FRAME_ALREADY_BIND);
-		}
+//		Frame frame = frameService.selectOneByFrameCode(frameCode);
+//		if (null == frame) {
+//			return ResponseWrapper.fail(ErrorCodes.FRAME_NOT_FOUND);
+//		}
+//		if (StringUtils.isNotBlank(frame.getShopCode())) {
+//			return ResponseWrapper.fail(ErrorCodes.FRAME_ALREADY_BIND);
+//		}
 
 		frameService.updateNullShopCode(frame.getId());
 		boxService.unbindWithFrame(frameCode);
