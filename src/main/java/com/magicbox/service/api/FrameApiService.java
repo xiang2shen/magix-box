@@ -99,7 +99,7 @@ public class FrameApiService {
 		}
 
 		// 校验设备是否没有绑定过其他店铺
-//		Frame frame = frameService.selectOneByFrameCode(frameCode);
+		Frame frame = frameService.selectOneByFrameCode(frameCode);
 //		if (null == frame) {
 //			return ResponseWrapper.fail(ErrorCodes.FRAME_NOT_FOUND);
 //		}
